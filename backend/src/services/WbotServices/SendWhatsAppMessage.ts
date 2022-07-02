@@ -43,14 +43,25 @@ const SendWhatsAppMessage = async ({
 
       const msgFound = JSON.parse(chatMessages.dataJson);
 
-      options = {
-        quoted: {
-          key: msgFound.key,
-          message: {
-            extendedTextMessage: msgFound.message.extendedTextMessage
-          }
-        }
-      };
+      if (msgFound.key.fromMe)
+      {
+          options = {
+            quoted: {
+              key: msgFound.key,
+              message: {
+                extendedTextMessage: msgFound.message.extendedTextMessage
+              }
+            }
+          };
+      } else {
+          options = {
+            quoted: {
+              key: msgFound.key,
+              message: msgFound.message
+            }
+          };
+      }
+      
     }
   }
 
