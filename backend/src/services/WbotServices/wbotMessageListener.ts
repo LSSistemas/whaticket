@@ -769,29 +769,31 @@ const handleMessage = async (
         }
       }
     } else {
-      const getLastMessageFromMe = await Message.findOne({
-        where: {
-          ticketId: ticket.id,
-          fromMe: true
-        },
-        order: [["createdAt", "DESC"]]
-      });
+      if (!msg.key.fromMe)
+      {
+        const getLastMessageFromMe = await Message.findOne({
+          where: {
+            ticketId: ticket.id,
+            fromMe: true
+          },
+          order: [["createdAt", "DESC"]]
+        });
 
-      if (
-        getLastMessageFromMe?.body ===
-        formatBody(`\u200e${whatsapp.outOfWorkMessage}`, contact)
-      )
-        return;
+        if (
+          getLastMessageFromMe?.body ===
+          formatBody(`\u200e${whatsapp.outOfWorkMessage}`, contact)
+        )
+          return;
 
-      const body = formatBody(`\u200e${whatsapp.outOfWorkMessage}`, contact);
-      const sentMessage = await wbot.sendMessage(
-        `${contact.number}@${ticket.isGroup ? "g.us" : "s.whatsapp.net"}`,
-        {
-          text: body
+        const body = formatBody(`\u200e${whatsapp.outOfWorkMessage}`, contact);
+        const sentMessage = await wbot.sendMessage(
+          `${contact.number}@${ticket.isGroup ? "g.us" : "s.whatsapp.net"}`,
+          {
+            text: body
+          }
+        );
+        await verifyMessage(sentMessage, ticket, contact);
         }
-      );
-
-      await verifyMessage(sentMessage, ticket, contact);
     }
   } catch (err) {
     console.log(err);
