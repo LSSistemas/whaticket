@@ -38,7 +38,7 @@ export default (body: string, contact: Contact): string => {
   const hora = `${hh}:${min}:${ss}`;
 
   const view = {
-    name: contact ? contact.name : "",
+    name: contact ? (contact.name != contact.number ? contact.name : "") : "",
     gretting: greeting(),
     ms,
     protocol,
