@@ -6,7 +6,11 @@ import Whatsapp from "./models/Whatsapp";
 import { logger } from "./utils/logger";
 import Schedule from "./models/Schedule";
 import Contact from "./models/Contact";
+import ShowTicketService from "./services/TicketServices/ShowTicketService";
 import GetDefaultWhatsApp from "./helpers/GetDefaultWhatsApp";
+import FindOrCreateTicketService from "./services/TicketServices/FindOrCreateTicketService";
+import SetTicketMessagesAsRead from "./helpers/SetTicketMessagesAsRead";
+import SendWhatsAppMessage from "./services/WbotServices/SendWhatsAppMessage";
 
 const connection = process.env.REDIS_URI || "";
 const limiterMax = process.env.REDIS_OPT_LIMITER_MAX || 1;
@@ -95,17 +99,26 @@ export function startQueueProcess() {
     try {
       const whatsapp = await GetDefaultWhatsApp();
 
-      await SendMessage(whatsapp, {
-        number: schedule.contact.number,
-        body: schedule.body
+      const createTicket = await FindOrCreateTicketService({
+        whatsappId: whatsapp.id,
+        contact: schedule.contact,
+        unreadMessages: 0,
+        channel: "whatsapp"
       });
+    
+      const ticket = await ShowTicketService(createTicket.id);
+    
+      SetTicketMessagesAsRead(ticket);
+
+      await SendWhatsAppMessage({ body: schedule.body, ticket: ticket, quotedMsg: null });
 
       await scheduleRecord?.update({
         sentAt: moment().format("YYYY-MM-DD HH:mm"),
+        ticketId: ticket.id,
         status: "ENVIADA"
       });
 
-      logger.info(`Mensagem agendada enviada para: ${schedule.contact.name}`);
+      //logger.info(`Mensagem agendada enviada para: ${schedule.contact.name}`);
       sendScheduledMessages.clean(15000, "completed");
     } catch (e: any) {
       await scheduleRecord?.update({
