@@ -114,7 +114,7 @@ export function startQueueProcess() {
 
       await scheduleRecord?.update({
         sentAt: moment().format("YYYY-MM-DD HH:mm"),
-        ticketId: ticket.id,
+        //ticketId: ticket.id,
         status: "ENVIADA"
       });
 
