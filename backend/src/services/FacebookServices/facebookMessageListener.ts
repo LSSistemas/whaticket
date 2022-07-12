@@ -7,6 +7,7 @@ import CreateOrUpdateContactService from "../ContactServices/CreateOrUpdateConta
 import CreateMessageService from "../MessageServices/CreateMessageService";
 import FindOrCreateTicketService from "../TicketServices/FindOrCreateTicketService";
 import { getProfile } from "./graphAPI";
+import { concat } from "lodash";
 
 interface IMe {
   name: string;
@@ -20,6 +21,7 @@ interface IMe {
 }
 
 const verifyContact = async (msgContact: IMe) => {
+  try{
   const contactData = {
     name:
       msgContact?.name || `${msgContact.first_name} ${msgContact.last_name}`,
@@ -31,6 +33,9 @@ const verifyContact = async (msgContact: IMe) => {
   const contact = CreateOrUpdateContactService(contactData);
 
   return contact;
+  } catch {
+    return null;
+  }
 };
 
 export const verifyMessage = async (
@@ -125,6 +130,9 @@ export const handleMessage = async (
 
     const contact = await verifyContact(msgContact);
 
+    if (contact != null)
+    {
+
     const unreadCount = fromMe ? 0 : 1;
 
     const ticket = await FindOrCreateTicketService({
@@ -139,5 +147,6 @@ export const handleMessage = async (
     } else {
       await verifyMessage(message, ticket, contact);
     }
+  }
   }
 };
