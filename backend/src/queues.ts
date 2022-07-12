@@ -21,7 +21,7 @@ export const messageQueue = new Queue("MessageQueue", connection, {
 
 export const scheduleMonitor = new Queue("ScheduleMonitor", connection);
 export const sendScheduledMessages = new Queue(
-  "SendSacheduledMessages",
+  "SendScheduledMessages",
   connection
 );
 
@@ -54,12 +54,13 @@ export function startQueueProcess() {
           status: "PENDENTE",
           sentAt: null,
           sendAt: {
-            [Op.gte]: new Date()
+            [Op.gte]: moment().format('YYYY-MM-DD HH:mm:ss'),
+            [Op.lte]: moment().add('30', 'seconds').format('YYYY-MM-DD HH:mm:ss')
           }
         },
         include: [{ model: Contact, as: "contact" }]
       });
-
+      //logger.info(`Quantidade de mensagens pendentes: ${count}`);
       if (count > 0) {
         schedules.map(async schedule => {
           await schedule.update({

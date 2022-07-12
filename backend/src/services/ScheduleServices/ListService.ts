@@ -65,7 +65,7 @@ const ListService = async ({
     where: whereCondition,
     limit,
     offset,
-    order: [["createdAt", "DESC"]],
+    order: [["sendAt", "DESC"]],
     include: [
       { model: Contact, as: "contact", attributes: ["id", "name"] },
       { model: User, as: "user", attributes: ["id", "name"] },
