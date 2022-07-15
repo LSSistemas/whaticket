@@ -152,7 +152,7 @@ const Tags = () => {
   };
 
   const handleSearch = (event) => {
-    setSearchParam(event.target.value.toLowerCase());
+    setSearchParam(event.target.value);
   };
 
   const handleEditTag = (tag) => {
@@ -215,7 +215,7 @@ const Tags = () => {
           placeholder={i18n.t("contacts.searchPlaceholder")}
           type="search"
           value={searchParam}
-          // onChange={handleSearch}
+          onChange={handleSearch}
           InputProps={{
             startAdornment: (
             <InputAdornment position="start">
