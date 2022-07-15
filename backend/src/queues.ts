@@ -112,9 +112,13 @@ export function startQueueProcess() {
 
       await SendWhatsAppMessage({ body: schedule.body, ticket: ticket, quotedMsg: null });
 
+      // await SendMessage(whatsapp, {
+      //   number: schedule.contact.number,
+      //   body: schedule.body
+      // });
+
       await scheduleRecord?.update({
         sentAt: moment().format("YYYY-MM-DD HH:mm"),
-        //ticketId: ticket.id,
         status: "ENVIADA"
       });
 
