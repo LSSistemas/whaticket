@@ -215,7 +215,7 @@ const Tags = () => {
           placeholder={i18n.t("contacts.searchPlaceholder")}
           type="search"
           value={searchParam}
-          onChange={handleSearch}
+          // onChange={handleSearch}
           InputProps={{
             startAdornment: (
             <InputAdornment position="start">
