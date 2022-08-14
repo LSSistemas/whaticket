@@ -85,11 +85,38 @@ const getBodyButton = (msg: proto.IWebMessageInfo): string => {
   }
 };
 
+const getViewOnceMessage = (msg: proto.IWebMessageInfo): string => {
+  if (msg.key.fromMe && msg?.message?.viewOnceMessage?.message?.buttonsMessage?.contentText) {
+    let bodyMessage = `*${msg?.message?.viewOnceMessage?.message?.buttonsMessage?.contentText}*`;
+    // eslint-disable-next-line no-restricted-syntax
+    for (const buton of msg.message?.viewOnceMessage?.message?.buttonsMessage?.buttons) {
+      console.log(buton);
+      bodyMessage += `\n\n${buton.buttonText?.displayText}`;
+    }
+    return bodyMessage;
+  }
+
+  if (msg.key.fromMe && msg?.message?.viewOnceMessage?.message?.listMessage) {
+    let bodyMessage = `*${msg?.message?.viewOnceMessage?.message?.listMessage?.description}*`;
+    // eslint-disable-next-line no-restricted-syntax
+    for (const buton of msg.message?.viewOnceMessage?.message?.listMessage?.sections) {
+      // eslint-disable-next-line no-restricted-syntax
+      for (const rows of buton.rows) {
+        bodyMessage += `\n\n${rows.title}`;
+      }
+    }
+
+    return bodyMessage;
+  }
+};
+
 export const getBodyMessage = (msg: proto.IWebMessageInfo): string | null => {
   try {
     const type = getTypeMessage(msg);
 
     const types = {
+      viewOnceMessage:
+        getViewOnceMessage(msg) || msg.message.listResponseMessage?.title,
       conversation: msg.message.conversation,
       imageMessage: msg.message.imageMessage?.caption,
       videoMessage: msg.message.videoMessage?.caption,
@@ -863,11 +890,7 @@ const wbotMessageListener = async (wbot: Session): Promise<void> => {
           !message.key.fromMe &&
           messageUpsert.type === "notify"
         ) {
-          (wbot as WASocket)!.sendReadReceipt(
-            message.key.remoteJid,
-            message.key.participant,
-            [message.key.id]
-          );
+          (wbot as WASocket)!.readMessages([message.key]);
         }
         // console.log(JSON.stringify(message));
         handleMessage(message, wbot);

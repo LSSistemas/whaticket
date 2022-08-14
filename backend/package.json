@@ -56,7 +56,6 @@
     "socket.io": "^3.0.5",
     "socketio-jwt-auth": "^0.2.1",
     "uuid": "^8.3.2",
-    "yarn": "^1.22.19",
     "yup": "^0.32.8"
   },
   "devDependencies": {
@@ -94,6 +93,7 @@
     "supertest": "^5.0.0",
     "ts-jest": "^26.4.1",
     "ts-node-dev": "^1.1.8",
-    "typescript": "^4.6.3"
+    "typescript": "^4.6.3",
+    "link-preview-js": "^2.1.19"
   }
 }
