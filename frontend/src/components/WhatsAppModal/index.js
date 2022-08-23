@@ -333,7 +333,7 @@ const WhatsAppModal = ({ open, onClose, whatsAppId }) => {
                 <div>
                   <Field
                     as={TextField}
-                    label="Mensagem de trasnferencia de atendimento"
+                    label="Mensagem de transferência de atendimento"
                     type="transferTicketMessage"
                     multiline
                     rows={5}
