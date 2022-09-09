@@ -45,7 +45,7 @@ const wbotMonitor = async (
 
         if (sendMsgCall.value === "disabled") {
           await wbot.sendMessage(node.attrs.from, {
-            text: "*Mensagem Automática:*\nAs chamadas de voz e vídeo estão desabilitas para esse WhatsApp, favor enviar uma mensagem de texto. Obrigado"
+            text: "*Mensagem Automática:*\nAs chamadas de voz e vídeo estão desabilitas para esse WhatsApp, favor enviar uma mensagem de texto ou áudio. Obrigado"
           });
 
           const number = node.attrs.from.replace(/\D/g, "");
