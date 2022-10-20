@@ -108,10 +108,10 @@ const TransferTicketModal = ({ modalOpen, onClose, ticketid, ticketWhatsappId })
 			if (selectedQueue && selectedQueue !== null) {
 				data.queueId = selectedQueue
 
-				if (!selectedUser) {
-					data.status = 'pending';
-					data.userId = null;
-				}
+				// if (!selectedUser) {
+				// 	data.status = 'pending';
+				// 	data.userId = null;
+				// }
 			}
 
 			if(selectedWhatsapp) {
@@ -151,14 +151,12 @@ const TransferTicketModal = ({ modalOpen, onClose, ticketid, ticketWhatsappId })
 						filterOptions={filterOptions}
 						freeSolo
 						autoHighlight
-						noOptionsText={i18n.t("transferTicketModal.noOptions")}
 						loading={loading}
 						renderInput={params => (
 							<TextField
 								{...params}
 								label={i18n.t("transferTicketModal.fieldLabel")}
 								variant="outlined"
-								required
 								autoFocus
 								onChange={e => setSearchParam(e.target.value)}
 								InputProps={{

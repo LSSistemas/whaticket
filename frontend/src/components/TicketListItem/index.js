@@ -13,6 +13,11 @@ import Typography from "@material-ui/core/Typography";
 import Avatar from "@material-ui/core/Avatar";
 import Divider from "@material-ui/core/Divider";
 import Badge from "@material-ui/core/Badge";
+import IconButton from "@material-ui/core/IconButton";
+
+import HighlightOffIcon from "@material-ui/icons/HighlightOff";
+import VisibilityIcon from "@material-ui/icons/Visibility";
+import CheckIcon from "@material-ui/icons/Check";
 
 import { i18n } from "../../translate/i18n";
 
@@ -91,6 +96,16 @@ const useStyles = makeStyles((theme) => ({
     left: "50%",
   },
 
+  viewButton: {
+    position: "absolute",
+    left: "60%",
+  },
+
+  closeButton: {
+    position: "absolute",
+    left: "70%",
+  },
+
   ticketQueueColor: {
     flex: "none",
     width: "8px",
@@ -150,6 +165,22 @@ const TicketListItem = ({ ticket }) => {
   const handleSelectTicket = (id) => {
     history.push(`/tickets/${id}`);
   };
+
+  const handleCloseTicket = async (id) => {
+		setLoading(true);
+		try {
+			await api.put(`/tickets/${ticket.id}`, {
+				status: 'closed',
+				userId: null,
+			});
+
+			setLoading(false);
+      history.push("/tickets");
+		} catch (err) {
+			setLoading(false);
+			toastError(err);
+		}
+	};
 
   return (
     <React.Fragment key={ticket.id}>
@@ -257,16 +288,35 @@ const TicketListItem = ({ ticket }) => {
           }
         />
         {ticket.status === "pending" && (
-          <ButtonWithSpinner
-            color="primary"
-            variant="contained"
-            className={classes.acceptButton}
-            size="small"
-            loading={loading}
-            onClick={(e) => handleAcepptTicket(ticket.id)}
-          >
-            {i18n.t("ticketsList.buttons.accept")}
-          </ButtonWithSpinner>
+          <IconButton
+          size="small"
+          title={i18n.t("ticketsList.buttons.accept")}
+          className={classes.acceptButton}
+          onClick={(e) => handleAcepptTicket(ticket.id)}
+        >
+          <CheckIcon />
+        </IconButton>  
+                  
+        )}
+        {ticket.status === "pending" && (
+          <IconButton
+          size="small"
+          title={i18n.t("ticketsList.buttons.view")}
+          className={classes.viewButton}
+          onClick={(e) => handleSelectTicket(ticket.id)}
+        >
+          <VisibilityIcon />
+        </IconButton>          
+        )}
+        {ticket.status === "pending" && (
+          <IconButton
+          size="small"
+          className={classes.closeButton}
+          title={i18n.t("ticketsList.buttons.close")}
+          onClick={(e) => handleCloseTicket(ticket.id)}
+        >
+          <HighlightOffIcon />
+        </IconButton>         
         )}
       </ListItem>
       <Divider variant="inset" component="li" />

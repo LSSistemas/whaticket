@@ -304,7 +304,9 @@ const messages = {
           "Nenhum ticket encontrado com esse status ou termo pesquisado",
         connectionTitle: "Conexão que está sendo utilizada atualmente.",
         buttons: {
-          accept: "Aceitar",
+          view: "Visualizar",
+          accept: "Aceitar",          
+          close: "Fechar",          
         },
       },
       newTicketModal: {

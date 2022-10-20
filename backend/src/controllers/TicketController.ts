@@ -17,7 +17,7 @@ type IndexQuery = {
   status: string;
   date: string;
   updatedAt?: string;
-  showAll: string;
+  showAll: string;  
   withUnreadMessages: string;
   queueIds: string;
   tags: string;

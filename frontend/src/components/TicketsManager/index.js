@@ -109,6 +109,7 @@ const TicketsManager = () => {
 
   const userQueueIds = user.queues.map((q) => q.id);
   const [selectedQueueIds, setSelectedQueueIds] = useState(userQueueIds || []);
+  
 
   useEffect(() => {
     if (user.profile.toUpperCase() === "ADMIN") {

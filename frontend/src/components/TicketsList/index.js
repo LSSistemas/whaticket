@@ -195,10 +195,10 @@ const TicketsList = (props) => {
 
   useEffect(() => {
     const socket = openSocket();
-
+    
     const shouldUpdateTicket = (ticket) =>
-      (!ticket.userId || ticket.userId === user?.id || showAll) &&
-      (!ticket.queueId || selectedQueueIds.indexOf(ticket.queueId) > -1);
+	  (!ticket.userId || ticket.userId === user?.id || showAll) &&
+		(!ticket.queueId || selectedQueueIds.indexOf(ticket.queueId) > -1);
 
     const notBelongsToUserQueues = (ticket) =>
       ticket.queueId && selectedQueueIds.indexOf(ticket.queueId) === -1;

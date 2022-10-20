@@ -48,6 +48,8 @@ const ListTicketsService = async ({
   };
   let includeCondition: Includeable[];
 
+  const user = await ShowUserService(userId);
+
   includeCondition = [
     {
       model: Contact,
@@ -71,10 +73,16 @@ const ListTicketsService = async ({
     }
   ];
 
-  if (showAll === "true") {
-    whereCondition = { queueId: { [Op.or]: [queueIds, null] } };
+  if (user.profile) {
+     if (showAll === "true")
+     {
+       whereCondition = { queueId: { [Op.or]: [queueIds, null] } };
+     }
+  } else {
+    console.log("passei aqui");
+    whereCondition = { queueId: { [Op.or]: [queueIds] } };
   }
-
+  
   if (status) {
     whereCondition = {
       ...whereCondition,
@@ -144,8 +152,7 @@ const ListTicketsService = async ({
     };
   }
 
-  if (withUnreadMessages === "true") {
-    const user = await ShowUserService(userId);
+  if (withUnreadMessages === "true") {    
     const userQueueIds = user.queues.map(queue => queue.id);
 
     whereCondition = {
