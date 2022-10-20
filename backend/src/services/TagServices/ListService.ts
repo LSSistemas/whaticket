@@ -46,10 +46,7 @@ const ListService = async ({
     },
     group: [
       "Tag.id",
-      "tickets.TicketTag.tagId",
-      "tickets.TicketTag.ticketId",
-      "tickets.TicketTag.createdAt",
-      "tickets.TicketTag.updatedAt",
+	  "Tag.name"
     ],
     subQuery: false
   });
