@@ -30,14 +30,9 @@ const ListMessagesService = async ({
     throw new AppError("ERR_NO_TICKET_FOUND", 404);
   }
 
-  var admin = false;
-
   let queues1 = [];
-  let whereCondition = {};
-
+  
   const user = await ShowUserService(userId);
-  admin = (user.profile === "admin");
-
   queues1 = user.queues.map(queue => queue.id);
 
   console.log(queues1);
@@ -61,7 +56,7 @@ const ListMessagesService = async ({
         model: Ticket,
         where: { 
           contactId: ticket.contactId,
-          queueId: queues1
+          queueId: { [Op.or]: [queues1, null]}
           },
         required: true
       }
