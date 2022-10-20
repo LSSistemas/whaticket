@@ -15,6 +15,7 @@ import sendFaceMessage from "../services/FacebookServices/sendFacebookMessage";
 
 type IndexQuery = {
   pageNumber: string;
+  userId: string;
 };
 
 type MessageData = {
@@ -26,11 +27,12 @@ type MessageData = {
 
 export const index = async (req: Request, res: Response): Promise<Response> => {
   const { ticketId } = req.params;
-  const { pageNumber } = req.query as IndexQuery;
+  const { pageNumber, userId } = req.query as IndexQuery;
 
   const { count, messages, ticket, hasMore } = await ListMessagesService({
     pageNumber,
-    ticketId
+    ticketId,
+    userId
   });
 
   SetTicketMessagesAsRead(ticket);

@@ -322,15 +322,22 @@ const messages = {
         listItems: {
           dashboard: "Dashboard",
           connections: "Conexões",
-          tickets: "Tickets",
+          tickets: "Conversas",
           contacts: "Contatos",
           quickAnswers: "Respostas Rápidas",
           queues: "Filas & Chatbot",
           schedules: "Agendamentos",
           tags: "Tags",
+		  api: "API",
+          gerenciarcampanha: "Campanhas",
+          configcampanha: "Config. Campanhas",
+          relatoriocampanha: "Relatório Envios",
+          enviocampanha: "Envio em Massa",
           administration: "Administração",
           users: "Usuários",
           settings: "Configurações",
+		  tokens: "Token",
+		  docs: "Documentação",
         },
         appBar: {
           user: {

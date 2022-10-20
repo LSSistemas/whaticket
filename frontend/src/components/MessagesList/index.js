@@ -1,8 +1,9 @@
-import React, { useState, useEffect, useReducer, useRef } from "react";
+import React, { useState, useEffect, useContext, useReducer, useRef } from "react";
 
 import { isSameDay, parseISO, format } from "date-fns";
 import openSocket from "socket.io-client";
 import clsx from "clsx";
+import { AuthContext } from "../../context/Auth/AuthContext";
 
 import { green } from "@material-ui/core/colors";
 import {
@@ -345,6 +346,7 @@ const MessagesList = ({ ticketId, isGroup }) => {
   const [anchorEl, setAnchorEl] = useState(null);
   const messageOptionsMenuOpen = Boolean(anchorEl);
   const currentTicketId = useRef(ticketId);
+  const { user } = useContext(AuthContext);
 
   useEffect(() => {
     dispatch({ type: "RESET" });
@@ -358,8 +360,10 @@ const MessagesList = ({ ticketId, isGroup }) => {
     const delayDebounceFn = setTimeout(() => {
       const fetchMessages = async () => {
         try {
+		  
+		  
           const { data } = await api.get("/messages/" + ticketId, {
-            params: { pageNumber },
+            params: { pageNumber: pageNumber, userId: user.id },
           });
 
           if (currentTicketId.current === ticketId) {
