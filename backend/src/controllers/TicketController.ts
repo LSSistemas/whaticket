@@ -24,10 +24,10 @@ type IndexQuery = {
 };
 
 interface TicketData {
-  contactId: number;
-  status: string;
-  queueId: number;
-  userId: number;
+  contactId?: number;
+  status?: string;
+  queueId?: number;
+  userId?: number;
 }
 
 export const index = async (req: Request, res: Response): Promise<Response> => {

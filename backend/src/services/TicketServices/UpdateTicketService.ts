@@ -46,30 +46,40 @@ const UpdateTicketService = async ({
     await CheckContactOpenTickets(ticket.contact.id, ticket.whatsappId);
   }
 
-  if (oldQueueId !== queueId && !isNil(oldQueueId) && !isNil(queueId)) {
-    const whatsapp = await Whatsapp.findOne({
-      where: { id: ticket.whatsappId }
-    });
-    const wbot = await GetTicketWbot(ticket);
+  console.log()
 
-    const newMessage = whatsapp?.transferTicketMessage.replace(
-      "{{fila}}",
-      ticket.queue.name
-    );
+  const newStatus = (userId === undefined && status !== "closed" && oldStatus !== "closed") ?
+                  "pending" : status;
+  const newUserId = (userId === undefined && status !== "closed" && oldStatus !== "closed") ?
+                  null : userId;
 
-    await wbot.sendMessage(
-      `${ticket.contact.number}@${ticket.isGroup ? "g.us" : "s.whatsapp.net"}`,
-      {
-        text: `\u200e${newMessage}`
-      }
-    );
-  }
+
+  //Mensagem para troca de fila
+  // if (oldQueueId !== queueId && !isNil(oldQueueId) && !isNil(queueId)) {
+  //   const whatsapp = await Whatsapp.findOne({
+  //     where: { id: ticket.whatsappId }
+  //   });
+  //   const wbot = await GetTicketWbot(ticket);
+
+  //   const newMessage = whatsapp?.transferTicketMessage.replace(
+  //     "{{fila}}",
+  //     ticket.queue.name
+  //   );
+
+  //   await wbot.sendMessage(
+  //     `${ticket.contact.number}@${ticket.isGroup ? "g.us" : "s.whatsapp.net"}`,
+  //     {
+  //       text: `\u200e${newMessage}`
+  //     }
+  //   );
+  // }
 
   await ticket.update({
-    status,
+    status: newStatus,
     queueId,
-    userId
+    userId: newUserId
   });
+
 
   if (whatsappId) {
     await ticket.update({

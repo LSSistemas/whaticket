@@ -109,8 +109,8 @@ const TransferTicketModal = ({ modalOpen, onClose, ticketid, ticketWhatsappId })
 				data.queueId = selectedQueue
 
 				// if (!selectedUser) {
-				// 	data.status = 'pending';
-				// 	data.userId = null;
+				//  	data.status = 'pending';
+				//  	data.userId = null;
 				// }
 			}
 
