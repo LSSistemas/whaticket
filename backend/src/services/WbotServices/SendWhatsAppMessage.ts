@@ -20,7 +20,6 @@ export const generateLinkPreviewIfRequired = async(text: string) => {
 	if(url) {
 		try {
 			const urlInfo = await getUrlInfo(url)
-      console.log(urlInfo);
 			return urlInfo
 		} catch(error) { // ignore if fails
 			
@@ -94,12 +93,8 @@ const SendWhatsAppMessage = async ({
   if(body.indexOf('http://') || body.indexOf('https://')) 
   {
     let opt: MessageContentGenerationOptions;
-    console.log("entrei aqui");
     l = await generateLinkPreviewIfRequired(body)
-  } else
-  {
-    console.log("passei direto");
-  }
+  } 
 
   try {
     const sentMessage = await wbot.sendMessage(

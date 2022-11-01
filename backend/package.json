@@ -40,6 +40,7 @@
     "file-type": "^17.1.1",
     "form-data": "^4.0.0",
     "http-graceful-shutdown": "^2.3.2",
+    "jimp": "^0.16.2",
     "jsonwebtoken": "^8.5.1",
     "link-preview-js": "^2.1.19",
     "multer": "^1.4.2",
