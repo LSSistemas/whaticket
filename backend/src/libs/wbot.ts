@@ -94,12 +94,13 @@ export const initWbot = async (whatsapp: Whatsapp): Promise<Session> => {
               logger: loggerBaileys,
               printQRInTerminal: false,
               auth: state as AuthenticationState,
+			        linkPreviewImageThumbnailWidth: 320,
               version
             })
           : makeWALegacySocket({
               logger: loggerBaileys,
               printQRInTerminal: false,
-              auth: state as LegacyAuthenticationCreds,
+              auth: state as LegacyAuthenticationCreds,			      
               version
             });
 

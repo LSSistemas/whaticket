@@ -1,10 +1,32 @@
-import { WALegacySocket, WAMessage } from "@adiwajshing/baileys";
+import { WALegacySocket, WAMessage, MessageGenerationOptions, WAUrlInfo, MessageContentGenerationOptions, computeChallengeResponse } from "@adiwajshing/baileys";
 import AppError from "../../errors/AppError";
 import GetTicketWbot from "../../helpers/GetTicketWbot";
 import Message from "../../models/Message";
 import Ticket from "../../models/Ticket";
+import { getUrlInfo } from "../../helpers/link-preview";
 
 import formatBody from "../../helpers/Mustache";
+
+
+export const URL_REGEX = /[-a-zA-Z0-9@:%._+~#=]{1,256}\.[a-zA-Z0-9()]{1,6}\b([-a-zA-Z0-9()@:%_+.~#?&//=]*)?/gi
+export const URL_EXCLUDE_REGEX = /.*@.*/
+
+export const extractUrlFromText = (text: string) => (
+	!URL_EXCLUDE_REGEX.test(text) ? text.match(URL_REGEX)?.[0] : undefined
+)
+
+export const generateLinkPreviewIfRequired = async(text: string) => {
+	const url = extractUrlFromText(text)
+	if(url) {
+		try {
+			const urlInfo = await getUrlInfo(url)
+      console.log(urlInfo);
+			return urlInfo
+		} catch(error) { // ignore if fails
+			
+		}
+	}
+}
 
 interface Request {
   body: string;
@@ -67,11 +89,24 @@ const SendWhatsAppMessage = async ({
     }
   }
 
+  let l: WAUrlInfo;
+
+  if(body.indexOf('http://') || body.indexOf('https://')) 
+  {
+    let opt: MessageContentGenerationOptions;
+    console.log("entrei aqui");
+    l = await generateLinkPreviewIfRequired(body)
+  } else
+  {
+    console.log("passei direto");
+  }
+
   try {
     const sentMessage = await wbot.sendMessage(
       number,
-      {
-        text: formatBody(body, ticket.contact)
+      {        
+        text: formatBody(body, ticket.contact),    
+        linkPreview: l    
       },
       {
         ...options

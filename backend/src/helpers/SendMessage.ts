@@ -3,13 +3,35 @@ import GetWhatsappWbot from "./GetWhatsappWbot";
 import SendWhatsAppMedia, { processAudio, processAudioFile } from "../services/WbotServices/SendWhatsAppMedia";
 import mime from "mime-types";
 import fs from "fs";
-import { AnyMessageContent } from "@adiwajshing/baileys";
+import { AnyMessageContent, WAUrlInfo, 
+    WATextMessage,
+    MessageContentGenerationOptions,
+    MessageGenerationOptions } from "@adiwajshing/baileys";
 
 export type MessageData = {
   number: number | string;
   body: string;
   mediaPath?: string;
 };
+
+export const URL_REGEX = /[-a-zA-Z0-9@:%._+~#=]{1,256}\.[a-zA-Z0-9()]{1,6}\b([-a-zA-Z0-9()@:%_+.~#?&//=]*)?/gi
+export const URL_EXCLUDE_REGEX = /.*@.*/
+
+export const extractUrlFromText = (text: string) => (
+	!URL_EXCLUDE_REGEX.test(text) ? text.match(URL_REGEX)?.[0] : undefined
+)
+
+export const generateLinkPreviewIfRequired = async(text: string, getUrlInfo: MessageGenerationOptions['getUrlInfo'], logger: MessageGenerationOptions['logger']) => {
+	const url = extractUrlFromText(text)
+	if(!!getUrlInfo && url) {
+		try {
+			const urlInfo = await getUrlInfo(url)
+			return urlInfo
+		} catch(error) { // ignore if fails
+			logger?.warn({ trace: error.stack }, 'url generation failed')
+		}
+	}
+}
 
 export const SendMessage = async (
   whatsapp: Whatsapp,
@@ -86,9 +108,26 @@ export const SendMessage = async (
 
       console.log(message);
     } else {
-      console.log(body);
+
+      
+      let l: WAUrlInfo;
+      let urlInfo = message.linkPreview
+      let options: MessageContentGenerationOptions;
+
+      if(body.indexOf('http://') || body.indexOf('https://')) 
+      {
+        l = await generateLinkPreviewIfRequired(message.text, options.getUrlInfo, options.logger)
+        urlInfo.canonicalUrl = l['canonical-url']
+        urlInfo.matchedText = l['matched-text']
+        urlInfo.jpegThumbnail = l.jpegThumbnail
+        urlInfo.description = l.description
+        urlInfo.title = l.title
+        urlInfo.previewType = 0
+      }
+
       message = await wbot.sendMessage(jid, {
-        text: body
+        text: body,
+        linkPreview: urlInfo
       });
     }
 
