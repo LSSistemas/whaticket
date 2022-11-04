@@ -72,7 +72,6 @@ const SendWhatsAppMessage = async ({
               message: {
                 extendedTextMessage: msgFound.message.extendedTextMessage
               },
-			  detectLinks: true
             }
           };
       } else {
@@ -81,7 +80,6 @@ const SendWhatsAppMessage = async ({
               key: msgFound.key,
               message: msgFound.message
             },
-			detectLinks: true
           };
       }
       
