@@ -1,7 +1,7 @@
 import { WAUrlInfo } from '@adiwajshing/baileys'
 import { extractImageThumb, getHttpStream } from '@adiwajshing/baileys'
 
-const THUMBNAIL_WIDTH_PX = 192
+const THUMBNAIL_WIDTH_PX = 320
 
 /** Fetches an image and generates a thumbnail for it */
 const getCompressedJpegThumbnail = async(url: string, { thumbnailWidth, timeoutMs }: URLGenerationOptions) => {
