@@ -86,20 +86,20 @@ const SendWhatsAppMessage = async ({
     }
   }
 
-  let l: WAUrlInfo;
+  // let l: WAUrlInfo;
 
-  if(body.indexOf('http://') || body.indexOf('https://')) 
-  {
-    let opt: MessageContentGenerationOptions;
-    l = await generateLinkPreviewIfRequired(body)
-  } 
+  // if(body.indexOf('http://') || body.indexOf('https://')) 
+  // {
+  //   let opt: MessageContentGenerationOptions;
+  //   l = await generateLinkPreviewIfRequired(body)
+  // } 
 
   try {
-    const sentMessage = await wbot.sendMessage(
+      const sentMessage = await wbot.sendMessage(
       number,
       {        
         text: formatBody(body, ticket.contact),    
-        linkPreview: l    
+        // linkPreview: l    
       },
       {
         ...options
