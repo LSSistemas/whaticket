@@ -72,7 +72,6 @@ export const store = async (req: Request, res: Response): Promise<Response> => {
     greetingMessage,
     farewellMessage,
     queueIds,
-
     transferTicketMessage,
     startWorkHour,
     endWorkHour,
