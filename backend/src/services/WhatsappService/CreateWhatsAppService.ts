@@ -11,7 +11,6 @@ interface Request {
   farewellMessage?: string;
   status?: string;
   isDefault?: boolean;
-  isMultidevice?: boolean;
   startWorkHour?: string;
   endWorkHour?: string;
   daysOfWeek?: string;
@@ -41,7 +40,6 @@ const CreateWhatsAppService = async ({
   greetingMessage,
   farewellMessage,
   isDefault = false,
-  isMultidevice,
   transferTicketMessage,
   startWorkHour,
   endWorkHour,
@@ -73,12 +71,11 @@ const CreateWhatsAppService = async ({
           return !nameExists;
         }
       ),
-    isDefault: Yup.boolean().required(),
-    isMultidevice: Yup.boolean().required()
+    isDefault: Yup.boolean().required()
   });
 
   try {
-    await schema.validate({ name, status, isDefault, isMultidevice });
+    await schema.validate({ name, status, isDefault });
   } catch (err) {
     throw new AppError(err.message);
   }
@@ -109,7 +106,6 @@ const CreateWhatsAppService = async ({
       greetingMessage,
       farewellMessage,
       isDefault,
-      isMultidevice,
       transferTicketMessage,
       startWorkHour,
       endWorkHour,

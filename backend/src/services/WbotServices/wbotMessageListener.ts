@@ -1,5 +1,4 @@
 import {
-  AnyWASocket,
   downloadContentFromMessage,
   extractMessageContent,
   getContentType,
@@ -7,7 +6,6 @@ import {
   MediaType,
   MessageUpsertType,
   proto,
-  WALegacySocket,
   WAMessage,
   WAMessageStubType,
   WAMessageUpdate,
@@ -34,7 +32,7 @@ import ShowWhatsAppService from "../WhatsappService/ShowWhatsAppService";
 import { sayChatbot } from "./ChatBotListener";
 import hourExpedient from "./hourExpedient";
 
-type Session = AnyWASocket & {
+type Session = WASocket & {
   id?: number;
   store?: Store;
 };
@@ -176,12 +174,7 @@ export const getQuotedMessage = (msg: proto.IWebMessageInfo): any => {
 };
 
 const getMeSocket = (wbot: Session): IMe => {
-  return wbot.type === "legacy"
-    ? {
-        id: jidNormalizedUser((wbot as WALegacySocket).state.legacy.user.id),
-        name: (wbot as WALegacySocket).state.legacy.user.name
-      }
-    : {
+  return {
         id: jidNormalizedUser((wbot as WASocket).user.id),
         name: (wbot as WASocket).user.name
       };
@@ -201,10 +194,6 @@ const getSenderMessage = (
 };
 
 const getContactMessage = async (msg: proto.IWebMessageInfo, wbot: Session) => {
-  if (wbot.type === "legacy") {
-    return wbot.store.contacts[msg.key.participant || msg.key.remoteJid] as IMe;
-  }
-
   const isGroup = msg.key.remoteJid.includes("g.us");
   const rawNumber = msg.key.remoteJid.replace(/\D/g, "");
   return isGroup
@@ -740,7 +729,7 @@ const handleMessage = async (
     if (msgIsGroupBlock?.value === "enabled" && isGroup) return;
 
     if (isGroup) {
-      const grupoMeta = await wbot.groupMetadata(msg.key.remoteJid, false);
+      const grupoMeta = await wbot.groupMetadata(msg.key.remoteJid);
       const msgGroupContact = {
         id: grupoMeta.id,
         name: grupoMeta.subject
@@ -877,36 +866,42 @@ const filterMessages = (msg: WAMessage): boolean => {
 
 const wbotMessageListener = async (wbot: Session): Promise<void> => {
   try {
-    wbot.ev.on("messages.upsert", async (messageUpsert: ImessageUpsert) => {
-      const messages = messageUpsert.messages
-        .filter(filterMessages)
-        .map(msg => msg);
-
-      if (!messages) return;
-
-      messages.forEach(async (message: proto.IWebMessageInfo) => {
-        if (
-          wbot.type === "md" &&
-          !message.key.fromMe &&
-          messageUpsert.type === "notify"
-        ) {
-          (wbot as WASocket)!.readMessages([message.key]);
+    wbot.ev.process(
+      async(events) => {
+        if(events['messages.upsert']) {
+            const messageUpsert = events['messages.upsert'];
+            const messages = messageUpsert.messages
+            .filter(filterMessages).map(msg => msg);
+    
+          if (!messages) return;
+    
+          messages.forEach(async (message: proto.IWebMessageInfo) => {
+            if (
+              wbot.type === "md" &&
+              !message.key.fromMe &&
+              messageUpsert.type === "notify"
+            ) {
+              (wbot as WASocket)!.readMessages([message.key]);
+            }
+            // console.log(JSON.stringify(message));
+            handleMessage(message, wbot);
+          });
+        } else if(events['messages.update']) {
+          const messageUpdate = events['messages.update'];
+          if (messageUpdate.length != 0) {
+            messageUpdate.forEach(async (message: WAMessageUpdate) => {
+              handleMsgAck(message, message.update.status);
+            });
+          }
+        } else if(events['messaging-history.set']) {
+          const { chats, contacts, messages, isLatest } = events['messaging-history.set']
+          if (messages.length != 0) {
+                messages.filter(filterMessages).map(msg => msg);
+          }
         }
-        // console.log(JSON.stringify(message));
-        handleMessage(message, wbot);
-      });
-    });
+      }
+    );
 
-    wbot.ev.on("messages.update", (messageUpdate: WAMessageUpdate[]) => {
-      if (messageUpdate.length === 0) return;
-      messageUpdate.forEach(async (message: WAMessageUpdate) => {
-        handleMsgAck(message, message.update.status);
-      });
-    });
-
-    wbot.ev.on("messages.set", async (messageSet: IMessage) => {
-      messageSet.messages.filter(filterMessages).map(msg => msg);
-    });
   } catch (error) {
     Sentry.captureException(error);
     logger.error(`Error handling wbot message listener. Err: ${error}`);

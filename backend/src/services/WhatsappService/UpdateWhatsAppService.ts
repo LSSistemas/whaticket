@@ -15,7 +15,6 @@ interface WhatsappData {
   farewellMessage?: string;
   queueIds?: number[];
   transferTicketMessage?: string;
-  isMultidevice?: boolean;
   startWorkHour?: string;
   endWorkHour?: string;
   startWorkHourWeekend?: string;
@@ -72,7 +71,6 @@ const UpdateWhatsAppService = async ({
     friday,
     saturday,
     sunday,
-    isMultidevice,
     defineWorkHours
   } = whatsappData;
 
@@ -114,7 +112,6 @@ const UpdateWhatsAppService = async ({
     outOfWorkMessage,
     monday,
     tuesday,
-    isMultidevice,
     wednesday,
     thursday,
     friday,

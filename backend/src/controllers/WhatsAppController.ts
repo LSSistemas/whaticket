@@ -16,7 +16,6 @@ interface WhatsappData {
   farewellMessage?: string;
   status?: string;
   isDefault?: boolean;
-  isMultidevice?: boolean;
   startWorkHour?: string;
   daysOfWeek: string;
   endWorkHour?: string;
@@ -49,7 +48,6 @@ export const store = async (req: Request, res: Response): Promise<Response> => {
     greetingMessage,
     farewellMessage,
     queueIds,
-    isMultidevice,
     transferTicketMessage,
     startWorkHour,
     endWorkHour,
@@ -74,7 +72,7 @@ export const store = async (req: Request, res: Response): Promise<Response> => {
     greetingMessage,
     farewellMessage,
     queueIds,
-    isMultidevice,
+
     transferTicketMessage,
     startWorkHour,
     endWorkHour,

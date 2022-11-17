@@ -14,7 +14,7 @@ const CheckContactNumber = async (number: string): Promise<string> => {
   let isGroup = number.endsWith("@g.us")
   let numberArray
   if (isGroup) {
-    const grupoMeta = await wbot.groupMetadata(number, false);
+    const grupoMeta = await wbot.groupMetadata(number);
     numberArray = [{
       jid: grupoMeta.id,
       exists: true

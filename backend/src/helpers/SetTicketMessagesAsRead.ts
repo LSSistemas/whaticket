@@ -1,4 +1,3 @@
-import { proto, WALegacySocket, WASocket } from "@adiwajshing/baileys";
 import { getIO } from "../libs/socket";
 import Message from "../models/Message";
 import Ticket from "../models/Ticket";
@@ -10,19 +9,7 @@ const SetTicketMessagesAsRead = async (ticket: Ticket): Promise<void> => {
 
   try {
     if (ticket.channel === "whatsapp") {
-      const wbot = await GetTicketWbot(ticket);
-      if (wbot.type === "legacy") {
-        const chatMessages = await (wbot as WALegacySocket).fetchMessagesFromWA(
-          `${ticket.contact.number}@${
-            ticket.isGroup ? "g.us" : "s.whatsapp.net"
-          }`,
-          100
-        );
-        chatMessages.forEach(async message => {
-          await (wbot as WALegacySocket).chatRead(message.key, 1);
-        });
-      }
-
+      const wbot = await GetTicketWbot(ticket);      
       logger.info(`Ticket ${ticket.id} messages read`);
     }
 

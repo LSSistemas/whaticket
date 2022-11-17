@@ -1,4 +1,4 @@
-import { proto, WALegacySocket } from "@adiwajshing/baileys";
+import { proto } from "@adiwajshing/baileys";
 import Ticket from "../models/Ticket";
 import GetTicketWbot from "./GetTicketWbot";
 import AppError from "../errors/AppError";
@@ -16,34 +16,12 @@ export const GetWbotMessage = async (
   const fetchWbotMessagesGradually = async (): Promise<
     proto.WebMessageInfo | Message
   > => {
-    if (getSock.type === "legacy") {
-      const wbot: WALegacySocket = getSock;
-      const chatMessages = await wbot.fetchMessagesFromWA(
-        `${ticket.contact.number}@${
-          ticket.isGroup ? "g.us" : "s.whatsapp.net"
-        }`,
-        limit
-      );
 
-      const msgFound = chatMessages.find(msg => msg.key.id === messageId);
+    const msgFound = await GetMessageService({
+      id: messageId
+    });
 
-      if (!msgFound && limit < 100) {
-        limit += 20;
-        return fetchWbotMessagesGradually();
-      }
-
-      return msgFound;
-    }
-
-    if (getSock.type === "md") {
-      const msgFound = await GetMessageService({
-        id: messageId
-      });
-
-      return msgFound;
-    }
-
-    return null;
+    return msgFound;
   };
 
   try {

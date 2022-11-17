@@ -1,18 +1,15 @@
 import makeWASocket, {
-  AnyWASocket,
+  WASocket,
   AuthenticationState,
   DisconnectReason,
   fetchLatestBaileysVersion,
-  LegacyAuthenticationCreds,
   makeInMemoryStore,
-  makeWALegacySocket
 } from "@adiwajshing/baileys";
 
 import { Boom } from "@hapi/boom";
 import MAIN_LOGGER from "@adiwajshing/baileys/lib/Utils/logger";
 import Whatsapp from "../models/Whatsapp";
 import { logger } from "../utils/logger";
-import authStateLegacy from "../helpers/authStateLegacy";
 import authState from "../helpers/authState";
 import AppError from "../errors/AppError";
 import { getIO } from "./socket";
@@ -23,7 +20,7 @@ import DeleteBaileysService from "../services/BaileysServices/DeleteBaileysServi
 const loggerBaileys = MAIN_LOGGER.child({});
 loggerBaileys.level = "error";
 
-type Session = AnyWASocket & {
+type Session = WASocket & {
   id?: number;
   store?: Store;
 };
@@ -72,37 +69,29 @@ export const initWbot = async (whatsapp: Whatsapp): Promise<Session> => {
 
         if (!whatsappUpdate) return;
 
-        const { id, name, isMultidevice } = whatsappUpdate;
+        const { id, name } = whatsappUpdate;
         const { version, isLatest } = await fetchLatestBaileysVersion();
 
         logger.info(`using WA v${version.join(".")}, isLatest: ${isLatest}`);
-        logger.info(`isMultidevice: ${isMultidevice}`);
         logger.info(`Starting session ${name}`);
         let retriesQrCode = 0;
 
         let wsocket: Session = null;
         const store = makeInMemoryStore({
-          logger: loggerBaileys
+          logger: loggerBaileys          
         });
 
-        const { state, saveState } = isMultidevice
-          ? await authState(whatsapp)
-          : await authStateLegacy(whatsapp);
+        const { state, saveState } = await authState(whatsapp);
 
-        wsocket = isMultidevice
-          ? makeWASocket({
+        wsocket = makeWASocket({
               logger: loggerBaileys,
               printQRInTerminal: false,
               auth: state as AuthenticationState,
-			        linkPreviewImageThumbnailWidth: 320,
-              version
-            })
-          : makeWALegacySocket({
-              logger: loggerBaileys,
-              printQRInTerminal: false,
-              auth: state as LegacyAuthenticationCreds,			      
+			        linkPreviewImageThumbnailWidth: 192,
+              generateHighQualityLinkPreview: true,
               version
             });
+          
 
         wsocket.ev.on(
           "connection.update",
