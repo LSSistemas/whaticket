@@ -31,7 +31,6 @@ export const SendMessage = async (
         mimetype: mime.lookup(messageData.mediaPath)
       } as Express.Multer.File;
 
-      console.log(media)
       const pathMedia = messageData.mediaPath;
       const typeMessage = media.mimetype.split("/")[0];
       let options: AnyMessageContent;
