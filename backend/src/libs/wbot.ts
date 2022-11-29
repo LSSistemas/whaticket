@@ -89,7 +89,29 @@ export const initWbot = async (whatsapp: Whatsapp): Promise<Session> => {
               auth: state as AuthenticationState,
 			        linkPreviewImageThumbnailWidth: 192,
               generateHighQualityLinkPreview: true,
-              version
+              version,
+              patchMessageBeforeSending: (message) => {
+                const requiresPatch = !!(
+                    message.buttonsMessage ||
+                    message.templateMessage ||
+                    message.listMessage
+                );
+                if (requiresPatch) {
+                    message = {
+                        viewOnceMessage: {
+                            message: {
+                                messageContextInfo: {
+                                    deviceListMetadataVersion: 2,
+                                    deviceListMetadata: {},
+                                },
+                                ...message,
+                            },
+                        },
+                    };
+                }
+    
+                return message;
+              }
             });
           
 

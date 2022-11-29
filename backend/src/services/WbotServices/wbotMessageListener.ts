@@ -535,7 +535,8 @@ const verifyQueue = async (
         const buttonMessage = {
           text: formatBody(`\u200e${choosenQueue.greetingMessage}`, contact),
           buttons,
-          headerType: 4
+          footer: 'OW NET',
+          headerType: 1
         };
 
         const sendMsg = await wbot.sendMessage(
@@ -573,7 +574,8 @@ const verifyQueue = async (
       const buttonMessage = {
         text: formatBody(`\u200e${greetingMessage}`, contact),
         buttons,
-        headerType: 4
+        footer: 'OW NET',
+        headerType: 1
       };
 
       const sendMsg = await wbot.sendMessage(
@@ -611,6 +613,8 @@ const verifyQueue = async (
         const listMessage = {
           text: formatBody(`\u200e${choosenQueue.greetingMessage}`, contact),
           buttonText: "Escolha uma opção",
+          footer: 'OW NET',
+          title: 'OW NET',
           sections
         };
 
