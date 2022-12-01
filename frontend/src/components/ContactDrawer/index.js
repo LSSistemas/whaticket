@@ -123,7 +123,7 @@ const ContactDrawer = ({ open, handleDrawerClose, contact, loading }) => {
 
 						<Typography>{contact.name}</Typography>
 						<Typography>
-							<Link href={`tel:${contact.number}`}>{contact.number}</Link>
+							<Link href={`https://wa.me/${contact.number}`}>{contact.number}</Link>
 						</Typography>
 						<Button
 							variant="outlined"
