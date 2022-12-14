@@ -694,7 +694,7 @@ const handleMessage = async (
   msg: proto.IWebMessageInfo,
   wbot: Session
 ): Promise<void> => {
-  if (!isValidMsg(msg)) return;
+  if (!isValidMsg(msg))   {    return;  }
   try {
     let msgContact: IMe;
     let groupContact: Contact | undefined;
@@ -705,7 +705,7 @@ const handleMessage = async (
       where: { key: "CheckMsgIsGroup" }
     });
 
-    const bodyMessage = getBodyMessage(msg);
+    var bodyMessage = getBodyMessage(msg);
     const msgType = getTypeMessage(msg);
 
     const hasMedia =
@@ -714,10 +714,11 @@ const handleMessage = async (
       msg.message?.videoMessage ||
       msg.message?.documentMessage ||
       msg.message.stickerMessage;
-
+      
     if (msg.key.fromMe) {
-      if (/\u200e/.test(bodyMessage)) return;
-
+      if (/\u200e/.test(bodyMessage)) {
+        bodyMessage = bodyMessage.replace(/\u200e/, '');
+      };
       if (
         !hasMedia &&
         msgType !== "conversation" &&
@@ -741,13 +742,11 @@ const handleMessage = async (
       groupContact = await verifyContact(msgGroupContact, wbot);
     }
     const whatsapp = await ShowWhatsAppService(wbot.id!);
-
     const count = wbot.store.chats.get(
       msg.key.remoteJid || msg.key.participant
     );
 
     const unreadMessages = msg.key.fromMe ? 0 : count?.unreadCount || 1;
-
     const contact = await verifyContact(msgContact, wbot);
 
     if (
@@ -872,11 +871,12 @@ const wbotMessageListener = async (wbot: Session): Promise<void> => {
   try {
     wbot.ev.process(
       async(events) => {
+
         if(events['messages.upsert']) {
             const messageUpsert = events['messages.upsert'];
             const messages = messageUpsert.messages
-            .filter(filterMessages).map(msg => msg);
-    
+                              .filter(filterMessages).map(msg => msg);          
+          
           if (!messages) return;
     
           messages.forEach(async (message: proto.IWebMessageInfo) => {
@@ -890,7 +890,7 @@ const wbotMessageListener = async (wbot: Session): Promise<void> => {
             // console.log(JSON.stringify(message));
             handleMessage(message, wbot);
           });
-        } else if(events['messages.update']) {
+        } else if(events['messages.update']) {          
           const messageUpdate = events['messages.update'];
           if (messageUpdate.length != 0) {
             messageUpdate.forEach(async (message: WAMessageUpdate) => {
