@@ -166,7 +166,7 @@ export const getQuotedMessage = (msg: proto.IWebMessageInfo): any => {
   if (!body?.contextInfo?.quotedMessage) return;
   const quoted = extractMessageContent(
     body?.contextInfo?.quotedMessage[
-      Object.keys(body?.contextInfo?.quotedMessage).values().next().value
+    Object.keys(body?.contextInfo?.quotedMessage).values().next().value
     ]
   );
 
@@ -175,9 +175,9 @@ export const getQuotedMessage = (msg: proto.IWebMessageInfo): any => {
 
 const getMeSocket = (wbot: Session): IMe => {
   return {
-        id: jidNormalizedUser((wbot as WASocket).user.id),
-        name: (wbot as WASocket).user.name
-      };
+    id: jidNormalizedUser((wbot as WASocket).user.id),
+    name: (wbot as WASocket).user.name
+  };
 };
 
 const getSenderMessage = (
@@ -198,13 +198,13 @@ const getContactMessage = async (msg: proto.IWebMessageInfo, wbot: Session) => {
   const rawNumber = msg.key.remoteJid.replace(/\D/g, "");
   return isGroup
     ? {
-        id: getSenderMessage(msg, wbot),
-        name: msg.pushName
-      }
+      id: getSenderMessage(msg, wbot),
+      name: msg.pushName
+    }
     : {
-        id: msg.key.remoteJid,
-        name: msg.key.fromMe ? rawNumber : msg.pushName
-      };
+      id: msg.key.remoteJid,
+      name: msg.key.fromMe ? rawNumber : msg.pushName
+    };
 };
 
 const downloadMedia = async (msg: proto.IWebMessageInfo) => {
@@ -213,23 +213,24 @@ const downloadMedia = async (msg: proto.IWebMessageInfo) => {
     msg.message?.audioMessage ||
     msg.message?.videoMessage ||
     msg.message?.stickerMessage ||
-    msg.message?.documentMessage;
+    msg.message?.documentMessage ||
+    msg.message?.extendedTextMessage?.contextInfo?.quotedMessage?.imageMessage;
 
   const messageType = mineType.mimetype
     .split("/")[0]
     .replace("application", "document")
     ? (mineType.mimetype
-        .split("/")[0]
-        .replace("application", "document") as MediaType)
+      .split("/")[0]
+      .replace("application", "document") as MediaType)
     : (mineType.mimetype.split("/")[0] as MediaType);
 
   const stream = await downloadContentFromMessage(
     msg.message.audioMessage ||
-      msg.message.videoMessage ||
-      msg.message.documentMessage ||
-      msg.message.imageMessage ||
-      msg.message.stickerMessage ||
-      msg.message.extendedTextMessage?.contextInfo.quotedMessage.imageMessage,
+    msg.message.videoMessage ||
+    msg.message.documentMessage ||
+    msg.message.imageMessage ||
+    msg.message.stickerMessage ||
+    msg.message.extendedTextMessage?.contextInfo.quotedMessage.imageMessage,
     messageType
   );
 
@@ -407,8 +408,20 @@ const isValidMsg = (msg: proto.IWebMessageInfo): boolean => {
     msgType === "documentMessage" ||
     msgType === "stickerMessage" ||
     msgType === "buttonsResponseMessage" ||
+    msgType === "buttonsMessage" ||
+    msgType === "messageContextInfo" ||
+    msgType === "locationMessage" ||
+    msgType === "liveLocationMessage" ||
+    msgType === "contactMessage" ||
+    msgType === "voiceMessage" ||
+    msgType === "mediaMessage" ||
+    msgType === "contactsArrayMessage" ||
+    msgType === "reactionMessage" ||
+    msgType === "ephemeralMessage" ||
+    msgType === "protocolMessage" ||
     msgType === "listResponseMessage" ||
-    msgType === "listMessage";
+    msgType === "listMessage" ||
+    msgType === "viewOnceMessage";
 
   return !!ifType;
 };
@@ -694,7 +707,8 @@ const handleMessage = async (
   msg: proto.IWebMessageInfo,
   wbot: Session
 ): Promise<void> => {
-  if (!isValidMsg(msg))   {    return;  }
+
+  if (!isValidMsg(msg)) { return; }
   try {
     let msgContact: IMe;
     let groupContact: Contact | undefined;
@@ -713,19 +727,19 @@ const handleMessage = async (
       msg.message?.imageMessage ||
       msg.message?.videoMessage ||
       msg.message?.documentMessage ||
-      msg.message.stickerMessage;
-      
+      msg.message.stickerMessage ||
+      msg.message?.extendedTextMessage?.contextInfo?.quotedMessage
+        ?.imageMessage;
+
+
+        console.log(msgType);
     if (msg.key.fromMe) {
       if (/\u200e/.test(bodyMessage)) {
         bodyMessage = bodyMessage.replace(/\u200e/, '');
       };
-      if (
-        !hasMedia &&
-        msgType !== "conversation" &&
-        msgType !== "extendedTextMessage" &&
-        msgType !== "vcard"
-      )
+      if (!hasMedia && msgType !== "conversation" && msgType !== "extendedTextMessage" && msgType !== "contactMessage")
         return;
+
       msgContact = await getContactMessage(msg, wbot);
     } else {
       msgContact = await getContactMessage(msg, wbot);
@@ -788,8 +802,7 @@ const handleMessage = async (
         }
       }
     } else {
-      if (!msg.key.fromMe)
-      {
+      if (!msg.key.fromMe) {
         const getLastMessageFromMe = await Message.findOne({
           where: {
             ticketId: ticket.id,
@@ -812,7 +825,7 @@ const handleMessage = async (
           }
         );
         await verifyMessage(sentMessage, ticket, contact);
-        }
+      }
     }
   } catch (err) {
     console.log(err);
@@ -870,15 +883,15 @@ const filterMessages = (msg: WAMessage): boolean => {
 const wbotMessageListener = async (wbot: Session): Promise<void> => {
   try {
     wbot.ev.process(
-      async(events) => {
+      async (events) => {
 
-        if(events['messages.upsert']) {
-            const messageUpsert = events['messages.upsert'];
-            const messages = messageUpsert.messages
-                              .filter(filterMessages).map(msg => msg);          
-          
+        if (events['messages.upsert']) {
+          const messageUpsert = events['messages.upsert'];
+          const messages = messageUpsert.messages
+            .filter(filterMessages).map(msg => msg);
+
           if (!messages) return;
-    
+
           messages.forEach(async (message: proto.IWebMessageInfo) => {
             if (
               wbot.type === "md" &&
@@ -890,17 +903,17 @@ const wbotMessageListener = async (wbot: Session): Promise<void> => {
             // console.log(JSON.stringify(message));
             handleMessage(message, wbot);
           });
-        } else if(events['messages.update']) {          
+        } else if (events['messages.update']) {
           const messageUpdate = events['messages.update'];
           if (messageUpdate.length != 0) {
             messageUpdate.forEach(async (message: WAMessageUpdate) => {
               handleMsgAck(message, message.update.status);
             });
           }
-        } else if(events['messaging-history.set']) {
+        } else if (events['messaging-history.set']) {
           const { chats, contacts, messages, isLatest } = events['messaging-history.set']
           if (messages.length != 0) {
-                messages.filter(filterMessages).map(msg => msg);
+            messages.filter(filterMessages).map(msg => msg);
           }
         }
       }
