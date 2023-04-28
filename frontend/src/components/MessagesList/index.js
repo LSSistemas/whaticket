@@ -446,7 +446,7 @@ const MessagesList = ({ ticketId, isGroup }) => {
 
   const checkMessageMedia = (message) => {
     console.log(message);
-	if(message.mediaType === "location" && message.body.split('|').length >= 2) {
+	if(message.mediaType === "locationMessage" && message.body.split('|').length >= 2) {
 		let locationParts = message.body.split('|')
 		let imageLocation = locationParts[0]		
 		let linkLocation = locationParts[1]
@@ -459,8 +459,6 @@ const MessagesList = ({ ticketId, isGroup }) => {
 		return <LocationPreview image={imageLocation} link={linkLocation} description={descriptionLocation} />
 	}
 	else if (message.mediaType === "contactMessage") {
-		console.log("contactMessage")
-		console.log(message)
 		let array = message.body.split("\n");
 		let obj = [];
 		let contact = "";
@@ -710,7 +708,7 @@ const MessagesList = ({ ticketId, isGroup }) => {
                   <ExpandMore />
                 </IconButton>
                 {(message.mediaUrl || message.mediaType === "locationMessage" || message.mediaType === "contactMessage" 
-                //|| message.mediaType === "multi_vcard" 
+                || message.mediaType === "contactsArrayMessage" 
                 ) && checkMessageMedia(message)}
                 <div
                   className={clsx(classes.textContentItem, {

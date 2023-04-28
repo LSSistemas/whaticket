@@ -119,6 +119,8 @@ export const getBodyMessage = (msg: proto.IWebMessageInfo): string | null => {
       imageMessage: msg.message.imageMessage?.caption,
       videoMessage: msg.message.videoMessage?.caption,
       extendedTextMessage: msg.message.extendedTextMessage?.text,
+      ephemeralMessage:
+        msg.message?.ephemeralMessage?.message?.extendedTextMessage?.text,
       buttonsResponseMessage:
         msg.message.buttonsResponseMessage?.selectedDisplayText,
       listResponseMessage:
@@ -730,14 +732,20 @@ const handleMessage = async (
       msg.message.stickerMessage ||
       msg.message?.extendedTextMessage?.contextInfo?.quotedMessage
         ?.imageMessage;
-
-
-        console.log(msgType);
     if (msg.key.fromMe) {
       if (/\u200e/.test(bodyMessage)) {
         bodyMessage = bodyMessage.replace(/\u200e/, '');
       };
-      if (!hasMedia && msgType !== "conversation" && msgType !== "extendedTextMessage" && msgType !== "contactMessage")
+      if (
+        !hasMedia &&
+        msgType !== "conversation" &&
+        msgType !== "extendedTextMessage" &&
+        msgType !== "vcard" &&
+        msgType !== "reactionMessage" &&
+        msgType !== "ephemeralMessage" &&
+        msgType !== "protocolMessage" &&
+        msgType !== "viewOnceMessage"
+      )
         return;
 
       msgContact = await getContactMessage(msg, wbot);
