@@ -14,15 +14,8 @@ const ImportContactsService = async (userId: number): Promise<void> => {
 
   try {
     const contactsString = await ShowBaileysService(wbot.id);
-    phoneContacts = JSON.parse(JSON.stringify(contactsString.contacts));
-  } catch (err) {
-    logger.error(`Could not get whatsapp contacts from phone. Err: ${err}`);
-  }
+    phoneContacts = JSON.parse(contactsString.contacts);
 
-  
-
-  if (phoneContacts) {
-    console.log(phoneContacts);
     phoneContacts.forEach(async ({ id, name }) => {
       if (id === "status@broadcast" || id.includes("g.us") === "g.us") return;
       const number = id.replace(/\D/g, "");
@@ -42,7 +35,13 @@ const ImportContactsService = async (userId: number): Promise<void> => {
         }
       }
     });
+  } catch (err) {
+    logger.error(`Could not get whatsapp contacts from phone. Err: ${err}`);
   }
+
+  
+
+
 };
 
 export default ImportContactsService;
