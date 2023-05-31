@@ -119,6 +119,7 @@ export const getBodyMessage = (msg: proto.IWebMessageInfo): string | null => {
       imageMessage: msg.message.imageMessage?.caption,
       videoMessage: msg.message.videoMessage?.caption,
       extendedTextMessage: msg.message.extendedTextMessage?.text,
+      reactionMessage: msg.message?.reactionMessage?.text,
       ephemeralMessage:
         msg.message?.ephemeralMessage?.message?.extendedTextMessage?.text,
       buttonsResponseMessage:
@@ -212,10 +213,24 @@ const getContactMessage = async (msg: proto.IWebMessageInfo, wbot: Session) => {
 const downloadMedia = async (msg: proto.IWebMessageInfo) => {
   const mineType =
     msg.message?.imageMessage ||
+    msg.message?.viewOnceMessageV2?.message?.imageMessage ||
+    msg.message?.viewOnceMessage?.message?.imageMessage ||
     msg.message?.audioMessage ||
-    msg.message?.videoMessage ||
+    msg.message?.ephemeralMessage?.message?.audioMessage ||
+    msg.message?.viewOnceMessageV2?.message?.audioMessage ||
+    msg.message?.viewOnceMessage?.message?.audioMessage ||
+    msg.message?.videoMessage ||  
+    msg.message?.ephemeralMessage?.message?.videoMessage ||
+    msg.message?.viewOnceMessageV2?.message?.videoMessage ||
+    msg.message?.viewOnceMessage?.message?.videoMessage ||
     msg.message?.stickerMessage ||
+    msg.message?.ephemeralMessage?.message?.stickerMessage ||
+    msg.message?.viewOnceMessageV2?.message?.stickerMessage ||
+    msg.message?.viewOnceMessage?.message?.stickerMessage ||
     msg.message?.documentMessage ||
+    msg.message?.ephemeralMessage?.message?.documentMessage ||
+    msg.message?.viewOnceMessageV2?.message?.documentMessage ||
+    msg.message?.viewOnceMessage?.message?.documentMessage ||
     msg.message?.extendedTextMessage?.contextInfo?.quotedMessage?.imageMessage;
 
   const messageType = mineType.mimetype
@@ -228,10 +243,29 @@ const downloadMedia = async (msg: proto.IWebMessageInfo) => {
 
   const stream = await downloadContentFromMessage(
     msg.message.audioMessage ||
+    msg.message.ephemeralMessage.message.audioMessage ||
+    msg.message.viewOnceMessageV2.message.audioMessage ||
+    msg.message.viewOnceMessage.message.audioMessage ||
+    
     msg.message.videoMessage ||
+    msg.message.ephemeralMessage.message.videoMessage ||
+    msg.message.viewOnceMessageV2.message.videoMessage ||
+    msg.message.viewOnceMessage.message.videoMessage ||
+    
     msg.message.documentMessage ||
+    msg.message.ephemeralMessage.message.documentMessage ||
+    msg.message.viewOnceMessageV2.message.documentMessage ||
+    msg.message.viewOnceMessage.message.documentMessage ||
+    
     msg.message.imageMessage ||
+    msg.message.viewOnceMessageV2.message.imageMessage ||
+    msg.message.viewOnceMessage.message.imageMessage ||
+    
     msg.message.stickerMessage ||
+    msg.message.ephemeralMessage.message.stickerMessage ||
+    msg.message.viewOnceMessageV2.message.stickerMessage ||
+    msg.message.viewOnceMessage.message.stickerMessage ||
+    
     msg.message.extendedTextMessage?.contextInfo.quotedMessage.imageMessage,
     messageType
   );
@@ -725,12 +759,26 @@ const handleMessage = async (
     const msgType = getTypeMessage(msg);
 
     const hasMedia =
-      msg.message?.audioMessage ||
-      msg.message?.imageMessage ||
-      msg.message?.videoMessage ||
-      msg.message?.documentMessage ||
-      msg.message.stickerMessage ||
-      msg.message?.extendedTextMessage?.contextInfo?.quotedMessage
+        msg.message?.imageMessage ||
+        msg.message?.viewOnceMessageV2?.message?.imageMessage ||
+        msg.message?.viewOnceMessage?.message?.imageMessage ||
+        msg.message?.audioMessage ||
+        msg.message?.ephemeralMessage?.message?.audioMessage ||
+        msg.message?.viewOnceMessageV2?.message?.audioMessage ||
+        msg.message?.viewOnceMessage?.message?.audioMessage ||
+        msg.message?.videoMessage ||  
+        msg.message?.ephemeralMessage?.message?.videoMessage ||
+        msg.message?.viewOnceMessageV2?.message?.videoMessage ||
+        msg.message?.viewOnceMessage?.message?.videoMessage ||
+        msg.message?.stickerMessage ||
+        msg.message?.ephemeralMessage?.message?.stickerMessage ||
+        msg.message?.viewOnceMessageV2?.message?.stickerMessage ||
+        msg.message?.viewOnceMessage?.message?.stickerMessage ||
+        msg.message?.documentMessage ||
+        msg.message?.ephemeralMessage?.message?.documentMessage ||
+        msg.message?.viewOnceMessageV2?.message?.documentMessage ||
+        msg.message?.viewOnceMessage?.message?.documentMessage ||
+        msg.message?.extendedTextMessage?.contextInfo?.quotedMessage
         ?.imageMessage;
     if (msg.key.fromMe) {
       if (/\u200e/.test(bodyMessage)) {
@@ -738,13 +786,11 @@ const handleMessage = async (
       };
       if (
         !hasMedia &&
-        msgType !== "conversation" &&
-        msgType !== "extendedTextMessage" &&
-        msgType !== "vcard" &&
-        msgType !== "reactionMessage" &&
-        msgType !== "ephemeralMessage" &&
-        msgType !== "protocolMessage" &&
-        msgType !== "viewOnceMessage"
+          msgType !== "conversation" &&
+          msgType !== "extendedTextMessage" &&
+          msgType !== "vcard" &&
+          msgType !== "reactionMessage" &&
+          msgType !== "protocolMessage" 
       )
         return;
 
