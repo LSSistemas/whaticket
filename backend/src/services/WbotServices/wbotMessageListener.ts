@@ -243,28 +243,28 @@ const downloadMedia = async (msg: proto.IWebMessageInfo) => {
 
   const stream = await downloadContentFromMessage(
     msg.message.audioMessage ||
-    msg.message.ephemeralMessage.message.audioMessage ||
-    msg.message.viewOnceMessageV2.message.audioMessage ||
-    msg.message.viewOnceMessage.message.audioMessage ||
+    msg.message.ephemeralMessage?.message?.audioMessage ||
+    msg.message.viewOnceMessageV2?.message?.audioMessage ||
+    msg.message.viewOnceMessage?.message?.audioMessage ||
     
     msg.message.videoMessage ||
-    msg.message.ephemeralMessage.message.videoMessage ||
-    msg.message.viewOnceMessageV2.message.videoMessage ||
-    msg.message.viewOnceMessage.message.videoMessage ||
+    msg.message.ephemeralMessage?.message?.videoMessage ||
+    msg.message.viewOnceMessageV2?.message?.videoMessage ||
+    msg.message.viewOnceMessage?.message?.videoMessage ||
     
     msg.message.documentMessage ||
-    msg.message.ephemeralMessage.message.documentMessage ||
-    msg.message.viewOnceMessageV2.message.documentMessage ||
-    msg.message.viewOnceMessage.message.documentMessage ||
+    msg.message.ephemeralMessage?.message?.documentMessage ||
+    msg.message.viewOnceMessageV2?.message?.documentMessage ||
+    msg.message.viewOnceMessage?.message?.documentMessage ||
     
     msg.message.imageMessage ||
-    msg.message.viewOnceMessageV2.message.imageMessage ||
-    msg.message.viewOnceMessage.message.imageMessage ||
+    msg.message.viewOnceMessageV2?.message?.imageMessage ||
+    msg.message.viewOnceMessage?.message?.imageMessage ||
     
     msg.message.stickerMessage ||
-    msg.message.ephemeralMessage.message.stickerMessage ||
-    msg.message.viewOnceMessageV2.message.stickerMessage ||
-    msg.message.viewOnceMessage.message.stickerMessage ||
+    msg.message.ephemeralMessage?.message?.stickerMessage ||
+    msg.message.viewOnceMessageV2?.message?.stickerMessage ||
+    msg.message.viewOnceMessage?.message?.stickerMessage ||
     
     msg.message.extendedTextMessage?.contextInfo.quotedMessage.imageMessage,
     messageType
