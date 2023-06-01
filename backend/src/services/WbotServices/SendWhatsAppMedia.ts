@@ -1,4 +1,4 @@
-import { WAMessage, AnyMessageContent } from "@WhiskeysSockets/Baileys";
+import { WAMessage, AnyMessageContent } from "@WhiskeysSockets/baileys";
 
 import fs from "fs";
 import { exec } from "child_process";

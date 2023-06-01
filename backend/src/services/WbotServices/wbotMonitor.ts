@@ -2,7 +2,7 @@ import {
   WASocket,
   BinaryNode,
   Contact as BContact
-} from "@WhiskeysSockets/Baileys";
+} from "@WhiskeysSockets/baileys";
 import * as Sentry from "@sentry/node";
 
 import { Op } from "sequelize";

@@ -1,4 +1,4 @@
-import { proto, WASocket } from "@WhiskeysSockets/Baileys";
+import { proto, WASocket } from "@WhiskeysSockets/baileys";
 import AppError from "../../errors/AppError";
 import GetTicketWbot from "../../helpers/GetTicketWbot";
 import GetWbotMessage from "../../helpers/GetWbotMessage";

@@ -1,4 +1,4 @@
-import { WASocket } from "@WhiskeysSockets/Baileys";
+import { WASocket } from "@WhiskeysSockets/baileys";
 import Queue from "bull";
 import moment from "moment";
 import { getWbot } from "./libs/wbot";

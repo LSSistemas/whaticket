@@ -6,7 +6,7 @@ import fs from "fs";
 import { AnyMessageContent, WAUrlInfo, 
     WATextMessage,
     MessageContentGenerationOptions,
-    MessageGenerationOptions } from "@WhiskeysSockets/Baileys";
+    MessageGenerationOptions } from "@WhiskeysSockets/baileys";
 
 export type MessageData = {
   number: number | string;

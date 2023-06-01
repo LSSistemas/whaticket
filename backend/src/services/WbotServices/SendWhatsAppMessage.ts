@@ -1,4 +1,4 @@
-import { WAMessage } from "@WhiskeysSockets/Baileys";
+import { WAMessage } from "@WhiskeysSockets/baileys";
 import AppError from "../../errors/AppError";
 import GetTicketWbot from "../../helpers/GetTicketWbot";
 import Message from "../../models/Message";
