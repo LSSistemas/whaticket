@@ -4,10 +4,10 @@ import makeWASocket, {
   DisconnectReason,
   fetchLatestBaileysVersion,
   makeInMemoryStore,
-} from "@adiwajshing/baileys";
+} from "@WhiskeysSockets/Baileys";
 
 import { Boom } from "@hapi/boom";
-import MAIN_LOGGER from "@adiwajshing/baileys/lib/Utils/logger";
+import MAIN_LOGGER from "@WhiskeysSockets/Baileys/lib/Utils/logger";
 import Whatsapp from "../models/Whatsapp";
 import { logger } from "../utils/logger";
 import authState from "../helpers/authState";

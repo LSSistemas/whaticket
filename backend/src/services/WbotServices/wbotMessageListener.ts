@@ -10,7 +10,7 @@ import {
   WAMessageStubType,
   WAMessageUpdate,
   WASocket
-} from "@adiwajshing/baileys";
+} from "@WhiskeysSockets/Baileys";
 import * as Sentry from "@sentry/node";
 import { writeFile } from "fs";
 import { join } from "path";
