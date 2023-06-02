@@ -1,4 +1,4 @@
-import { WAMessage, AnyMessageContent } from "@WhiskeysSockets/baileys";
+import { WAMessage, AnyMessageContent, delay } from "@WhiskeysSockets/baileys";
 
 import fs from "fs";
 import { exec } from "child_process";
@@ -100,13 +100,22 @@ const SendWhatsAppMedia = async ({
       };
     }
 
+    const jid = `${ticket.contact.number}@${ticket.isGroup ? "g.us" : "s.whatsapp.net"}`;
+
+    await wbot.presenceSubscribe(jid);
+    await delay(500);
+
+    await wbot.sendPresenceUpdate('composing', jid)
+    await delay(2000);
+
+    await wbot.sendPresenceUpdate('paused', jid)
+
     const sentMessage = await wbot.sendMessage(
-      `${ticket.contact.number}@${ticket.isGroup ? "g.us" : "s.whatsapp.net"}`,
+      jid,
       {
         ...options
       }
     );
-
     await ticket.update({ lastMessage: media.filename });
 
     return sentMessage;

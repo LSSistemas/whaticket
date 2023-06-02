@@ -1,4 +1,4 @@
-import { WAMessage } from "@WhiskeysSockets/baileys";
+import { WAMessage, delay } from "@WhiskeysSockets/baileys";
 import AppError from "../../errors/AppError";
 import GetTicketWbot from "../../helpers/GetTicketWbot";
 import Message from "../../models/Message";
@@ -51,6 +51,15 @@ const SendWhatsAppMessage = async ({
   }
 
   try {
+
+      await wbot.presenceSubscribe(number);
+		  await delay(500);
+
+		  await wbot.sendPresenceUpdate('composing', number)
+		  await delay(2000);
+
+      await wbot.sendPresenceUpdate('paused', number)
+
       const sentMessage = await wbot.sendMessage(
       number,
       {        
@@ -58,8 +67,8 @@ const SendWhatsAppMessage = async ({
       },
       {
         ...options
-      }
-    );
+      });
+
     await ticket.update({ lastMessage: formatBody(body, ticket.contact) });
     return sentMessage;
   } catch (err) {

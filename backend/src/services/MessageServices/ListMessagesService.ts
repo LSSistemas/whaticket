@@ -5,6 +5,7 @@ import Message from "../../models/Message";
 import Ticket from "../../models/Ticket";
 import ShowTicketService from "../TicketServices/ShowTicketService";
 import ShowUserService from "../UserServices/ShowUserService";
+import { SendAckBYticketId } from "../WbotServices/SendAck";
 
 interface Request {
   ticketId: string;
@@ -64,6 +65,10 @@ const ListMessagesService = async ({
     offset,
     order: [["createdAt", "DESC"]]
   });
+
+  if (ticket.channel === "whatsapp") {
+    await SendAckBYticketId({ ticketId })
+  }
 
   const hasMore = count > offset + messages.length;
 

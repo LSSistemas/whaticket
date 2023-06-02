@@ -957,6 +957,7 @@ const wbotMessageListener = async (wbot: Session): Promise<void> => {
             // console.log(JSON.stringify(message));
             handleMessage(message, wbot);
           });
+          
         } else if (events['messages.update']) {
           const messageUpdate = events['messages.update'];
           if (messageUpdate.length != 0) {

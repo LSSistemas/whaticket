@@ -1,4 +1,4 @@
-import { WASocket, proto } from "@WhiskeysSockets/baileys";
+import { WASocket, proto, delay} from "@WhiskeysSockets/baileys";
 import Contact from "../../models/Contact";
 import Ticket from "../../models/Ticket";
 import { Store } from "../../libs/store";
@@ -51,12 +51,24 @@ const sendMessage = async (
   ticket: Ticket,
   body: string
 ) => {
+
+  const jid = `${contact.number}@${ticket.isGroup ? "g.us" : "s.whatsapp.net"}`;
+
+  await wbot.presenceSubscribe(jid);
+  await delay(500);
+
+  await wbot.sendPresenceUpdate('composing', jid)
+  await delay(2000);
+
+  await wbot.sendPresenceUpdate('paused', jid)
+
   const sentMessage = await wbot.sendMessage(
-    `${contact.number}@${ticket.isGroup ? "g.us" : "s.whatsapp.net"}`,
+    jid,
     {
       text: formatBody(body, contact)
     }
   );
+
   verifyMessage(sentMessage, ticket, contact);
 };
 

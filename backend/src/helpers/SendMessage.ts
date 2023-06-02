@@ -5,6 +5,7 @@ import mime from "mime-types";
 import fs from "fs";
 import { AnyMessageContent, WAUrlInfo, 
     WATextMessage,
+    delay,
     MessageContentGenerationOptions,
     MessageGenerationOptions } from "@WhiskeysSockets/baileys";
 
@@ -79,6 +80,14 @@ export const SendMessage = async (
         };
       }
 
+      await wbot.presenceSubscribe(jid);
+		  await delay(500);
+
+		  await wbot.sendPresenceUpdate('composing', jid)
+		  await delay(2000);
+
+      await wbot.sendPresenceUpdate('paused', jid)
+
        message = await wbot.sendMessage(
         jid,
         {
@@ -86,12 +95,22 @@ export const SendMessage = async (
         }
       );
 
-      console.log(message);
     } else {
+
+
+      await wbot.presenceSubscribe(jid);
+		  await delay(500);
+
+		  await wbot.sendPresenceUpdate('composing', jid)
+		  await delay(2000);
+
+      await wbot.sendPresenceUpdate('paused', jid)
 
       message = await wbot.sendMessage(jid, {
         text: body
       });
+
+      wbot.sendPresenceUpdate('available');
     }
 
     return message;
