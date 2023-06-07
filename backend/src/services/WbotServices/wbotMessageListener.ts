@@ -12,8 +12,7 @@ import {
   WASocket
 } from "@WhiskeysSockets/baileys";
 import * as Sentry from "@sentry/node";
-import { writeFile } from "fs";
-import { join } from "path";
+import { writeFile } from "fs"; import { join } from "path";
 import { promisify } from "util";
 import { debounce } from "../../helpers/Debounce";
 import formatBody from "../../helpers/Mustache";
@@ -219,7 +218,7 @@ const downloadMedia = async (msg: proto.IWebMessageInfo) => {
     msg.message?.ephemeralMessage?.message?.audioMessage ||
     msg.message?.viewOnceMessageV2?.message?.audioMessage ||
     msg.message?.viewOnceMessage?.message?.audioMessage ||
-    msg.message?.videoMessage ||  
+    msg.message?.videoMessage ||
     msg.message?.ephemeralMessage?.message?.videoMessage ||
     msg.message?.viewOnceMessageV2?.message?.videoMessage ||
     msg.message?.viewOnceMessage?.message?.videoMessage ||
@@ -246,26 +245,26 @@ const downloadMedia = async (msg: proto.IWebMessageInfo) => {
     msg.message.ephemeralMessage?.message?.audioMessage ||
     msg.message.viewOnceMessageV2?.message?.audioMessage ||
     msg.message.viewOnceMessage?.message?.audioMessage ||
-    
+
     msg.message.videoMessage ||
     msg.message.ephemeralMessage?.message?.videoMessage ||
     msg.message.viewOnceMessageV2?.message?.videoMessage ||
     msg.message.viewOnceMessage?.message?.videoMessage ||
-    
+
     msg.message.documentMessage ||
     msg.message.ephemeralMessage?.message?.documentMessage ||
     msg.message.viewOnceMessageV2?.message?.documentMessage ||
     msg.message.viewOnceMessage?.message?.documentMessage ||
-    
+
     msg.message.imageMessage ||
     msg.message.viewOnceMessageV2?.message?.imageMessage ||
     msg.message.viewOnceMessage?.message?.imageMessage ||
-    
+
     msg.message.stickerMessage ||
     msg.message.ephemeralMessage?.message?.stickerMessage ||
     msg.message.viewOnceMessageV2?.message?.stickerMessage ||
     msg.message.viewOnceMessage?.message?.stickerMessage ||
-    
+
     msg.message.extendedTextMessage?.contextInfo.quotedMessage.imageMessage,
     messageType
   );
@@ -519,7 +518,7 @@ const verifyQueue = async (
         await verifyMessage(sentMessage, ticket, contact);
       }
 
-      if (!choosenQueue.chatbots.length) {
+      if (!choosenQueue.chatbots.length || choosenQueue.chatbots.length == 0) {
         const body = formatBody(
           `\u200e${choosenQueue.greetingMessage}`,
           contact
@@ -536,12 +535,14 @@ const verifyQueue = async (
     } else {
       let options = "";
 
-      queues.forEach((queue, index) => {
-        options += `*${index + 1}* - ${queue.name}\n`;
-      });
+      if (queues.length > 0) {
+        queues.forEach((queue, index) => {
+          options += `*${index + 1}* - ${queue.name}\n`;
+        });
+      }
 
-      const body = formatBody(
-        `\u200e${greetingMessage}\n\n${options}`,
+      var body = formatBody(
+        `\u200e${greetingMessage}` + (options != "" ? `\n\n${options}` : ``),
         contact
       );
 
@@ -759,26 +760,26 @@ const handleMessage = async (
     const msgType = getTypeMessage(msg);
 
     const hasMedia =
-        msg.message?.imageMessage ||
-        msg.message?.viewOnceMessageV2?.message?.imageMessage ||
-        msg.message?.viewOnceMessage?.message?.imageMessage ||
-        msg.message?.audioMessage ||
-        msg.message?.ephemeralMessage?.message?.audioMessage ||
-        msg.message?.viewOnceMessageV2?.message?.audioMessage ||
-        msg.message?.viewOnceMessage?.message?.audioMessage ||
-        msg.message?.videoMessage ||  
-        msg.message?.ephemeralMessage?.message?.videoMessage ||
-        msg.message?.viewOnceMessageV2?.message?.videoMessage ||
-        msg.message?.viewOnceMessage?.message?.videoMessage ||
-        msg.message?.stickerMessage ||
-        msg.message?.ephemeralMessage?.message?.stickerMessage ||
-        msg.message?.viewOnceMessageV2?.message?.stickerMessage ||
-        msg.message?.viewOnceMessage?.message?.stickerMessage ||
-        msg.message?.documentMessage ||
-        msg.message?.ephemeralMessage?.message?.documentMessage ||
-        msg.message?.viewOnceMessageV2?.message?.documentMessage ||
-        msg.message?.viewOnceMessage?.message?.documentMessage ||
-        msg.message?.extendedTextMessage?.contextInfo?.quotedMessage
+      msg.message?.imageMessage ||
+      msg.message?.viewOnceMessageV2?.message?.imageMessage ||
+      msg.message?.viewOnceMessage?.message?.imageMessage ||
+      msg.message?.audioMessage ||
+      msg.message?.ephemeralMessage?.message?.audioMessage ||
+      msg.message?.viewOnceMessageV2?.message?.audioMessage ||
+      msg.message?.viewOnceMessage?.message?.audioMessage ||
+      msg.message?.videoMessage ||
+      msg.message?.ephemeralMessage?.message?.videoMessage ||
+      msg.message?.viewOnceMessageV2?.message?.videoMessage ||
+      msg.message?.viewOnceMessage?.message?.videoMessage ||
+      msg.message?.stickerMessage ||
+      msg.message?.ephemeralMessage?.message?.stickerMessage ||
+      msg.message?.viewOnceMessageV2?.message?.stickerMessage ||
+      msg.message?.viewOnceMessage?.message?.stickerMessage ||
+      msg.message?.documentMessage ||
+      msg.message?.ephemeralMessage?.message?.documentMessage ||
+      msg.message?.viewOnceMessageV2?.message?.documentMessage ||
+      msg.message?.viewOnceMessage?.message?.documentMessage ||
+      msg.message?.extendedTextMessage?.contextInfo?.quotedMessage
         ?.imageMessage;
     if (msg.key.fromMe) {
       if (/\u200e/.test(bodyMessage)) {
@@ -786,11 +787,11 @@ const handleMessage = async (
       };
       if (
         !hasMedia &&
-          msgType !== "conversation" &&
-          msgType !== "extendedTextMessage" &&
-          msgType !== "vcard" &&
-          msgType !== "reactionMessage" &&
-          msgType !== "protocolMessage" 
+        msgType !== "conversation" &&
+        msgType !== "extendedTextMessage" &&
+        msgType !== "vcard" &&
+        msgType !== "reactionMessage" &&
+        msgType !== "protocolMessage"
       )
         return;
 
@@ -837,15 +838,13 @@ const handleMessage = async (
     } else {
       await verifyMessage(msg, ticket, contact);
     }
-
     const checkExpedient = await hourExpedient();
     if (checkExpedient) {
       if (
         !ticket.queue &&
         !isGroup &&
         !msg.key.fromMe &&
-        !ticket.userId &&
-        whatsapp.queues.length >= 1
+        !ticket.userId
       ) {
         await verifyQueue(wbot, msg, ticket, contact);
       }
@@ -957,7 +956,7 @@ const wbotMessageListener = async (wbot: Session): Promise<void> => {
             // console.log(JSON.stringify(message));
             handleMessage(message, wbot);
           });
-          
+
         } else if (events['messages.update']) {
           const messageUpdate = events['messages.update'];
           if (messageUpdate.length != 0) {
