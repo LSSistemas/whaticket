@@ -469,6 +469,11 @@ const verifyQueue = async (
 ) => {
   const { queues, greetingMessage } = await ShowWhatsAppService(wbot.id!);
 
+  if (queues.length === 0)
+  {
+    return;
+  }
+
   if (queues.length === 1) {
     await UpdateTicketService({
       ticketData: { queueId: queues[0].id },
@@ -518,7 +523,7 @@ const verifyQueue = async (
         await verifyMessage(sentMessage, ticket, contact);
       }
 
-      if (!choosenQueue.chatbots.length || choosenQueue.chatbots.length == 0) {
+      if ((!choosenQueue.chatbots.length || choosenQueue.chatbots.length == 0) && choosenQueue.greetingMessage !== undefined && choosenQueue.greetingMessage.length > 0) {
         const body = formatBody(
           `\u200e${choosenQueue.greetingMessage}`,
           contact
@@ -533,35 +538,38 @@ const verifyQueue = async (
         await verifyMessage(sentMessage, ticket, contact);
       }
     } else {
-      let options = "";
 
-      if (queues.length > 0) {
-        queues.forEach((queue, index) => {
-          options += `*${index + 1}* - ${queue.name}\n`;
-        });
+      if (greetingMessage !== null && greetingMessage !== undefined && greetingMessage.length > 0) {
+        let options = "";
+
+        if (queues.length > 0) {
+          queues.forEach((queue, index) => {
+            options += `*${index + 1}* - ${queue.name}\n`;
+          });
+        }
+
+        var body = formatBody(
+          `\u200e${greetingMessage}` + (options != "" ? `\n\n${options}` : ``),
+          contact
+        );
+
+        const debouncedSentMessage = debounce(
+          async () => {
+            const sentMessage = await wbot.sendMessage(
+              `${contact.number}@${ticket.isGroup ? "g.us" : "s.whatsapp.net"}`,
+              {
+                text: body
+              }
+            );
+
+            verifyMessage(sentMessage, ticket, contact);
+          },
+          3000,
+          ticket.id
+        );
+
+        debouncedSentMessage();
       }
-
-      var body = formatBody(
-        `\u200e${greetingMessage}` + (options != "" ? `\n\n${options}` : ``),
-        contact
-      );
-
-      const debouncedSentMessage = debounce(
-        async () => {
-          const sentMessage = await wbot.sendMessage(
-            `${contact.number}@${ticket.isGroup ? "g.us" : "s.whatsapp.net"}`,
-            {
-              text: body
-            }
-          );
-
-          verifyMessage(sentMessage, ticket, contact);
-        },
-        3000,
-        ticket.id
-      );
-
-      debouncedSentMessage();
     }
   };
 
@@ -597,7 +605,7 @@ const verifyQueue = async (
         await verifyMessage(sendMsg, ticket, contact);
       }
 
-      if (!choosenQueue.chatbots.length) {
+      if (!choosenQueue.chatbots.length && choosenQueue.greetingMessage !== null && choosenQueue.greetingMessage !== undefined && choosenQueue.greetingMessage.length > 0) {
         const body = formatBody(
           `\u200e${choosenQueue.greetingMessage}`,
           contact
@@ -612,28 +620,30 @@ const verifyQueue = async (
         await verifyMessage(sentMessage, ticket, contact);
       }
     } else {
-      const buttons = [];
-      queues.forEach((queue, index) => {
-        buttons.push({
-          buttonId: `${index + 1}`,
-          buttonText: { displayText: queue.name },
-          type: 4
+      if (greetingMessage !== null && greetingMessage !== undefined && greetingMessage.length > 0) {
+        const buttons = [];
+        queues.forEach((queue, index) => {
+          buttons.push({
+            buttonId: `${index + 1}`,
+            buttonText: { displayText: queue.name },
+            type: 4
+          });
         });
-      });
 
-      const buttonMessage = {
-        text: formatBody(`\u200e${greetingMessage}`, contact),
-        buttons,
-        footer: 'OW NET',
-        headerType: 1
-      };
+        const buttonMessage = {
+          text: formatBody(`\u200e${greetingMessage}`, contact),
+          buttons,
+          footer: 'OW NET',
+          headerType: 1
+        };
 
-      const sendMsg = await wbot.sendMessage(
-        `${contact.number}@${ticket.isGroup ? "g.us" : "s.whatsapp.net"}`,
-        buttonMessage
-      );
+        const sendMsg = await wbot.sendMessage(
+          `${contact.number}@${ticket.isGroup ? "g.us" : "s.whatsapp.net"}`,
+          buttonMessage
+        );
 
-      await verifyMessage(sendMsg, ticket, contact);
+        await verifyMessage(sendMsg, ticket, contact);
+      }
     }
   };
 
@@ -692,34 +702,36 @@ const verifyQueue = async (
         await verifyMessage(sentMessage, ticket, contact);
       }
     } else {
-      const sectionsRows = [];
+      if (greetingMessage !== null && greetingMessage !== undefined && greetingMessage.length > 0) {
+        const sectionsRows = [];
 
-      queues.forEach((queue, index) => {
-        sectionsRows.push({
-          title: queue.name,
-          rowId: `${index + 1}`
+        queues.forEach((queue, index) => {
+          sectionsRows.push({
+            title: queue.name,
+            rowId: `${index + 1}`
+          });
         });
-      });
 
-      const sections = [
-        {
-          title: "Menu",
-          rows: sectionsRows
-        }
-      ];
+        const sections = [
+          {
+            title: "Menu",
+            rows: sectionsRows
+          }
+        ];
 
-      const listMessage = {
-        text: formatBody(`\u200e${greetingMessage}`, contact),
-        buttonText: "Escolha uma opção",
-        sections
-      };
+        const listMessage = {
+          text: formatBody(`\u200e${greetingMessage}`, contact),
+          buttonText: "Escolha uma opção",
+          sections
+        };
 
-      const sendMsg = await wbot.sendMessage(
-        `${contact.number}@${ticket.isGroup ? "g.us" : "s.whatsapp.net"}`,
-        listMessage
-      );
+        const sendMsg = await wbot.sendMessage(
+          `${contact.number}@${ticket.isGroup ? "g.us" : "s.whatsapp.net"}`,
+          listMessage
+        );
 
-      await verifyMessage(sendMsg, ticket, contact);
+        await verifyMessage(sendMsg, ticket, contact);
+      }
     }
   };
 
