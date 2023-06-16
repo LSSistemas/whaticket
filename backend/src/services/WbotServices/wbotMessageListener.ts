@@ -115,12 +115,14 @@ export const getBodyMessage = (msg: proto.IWebMessageInfo): string | null => {
       viewOnceMessage:
         getViewOnceMessage(msg) || msg.message.listResponseMessage?.title,
       conversation: msg.message.conversation,
-      imageMessage: msg.message.imageMessage?.caption,
-      videoMessage: msg.message.videoMessage?.caption,
+      imageMessage: msg.message.imageMessage?.caption ||
+                    msg.message?.ephemeralMessage?.message?.imageMessage?.caption,
+      videoMessage: msg.message.videoMessage?.caption ||
+                    msg.message?.ephemeralMessage?.message?.videoMessage?.caption,
       extendedTextMessage: msg.message.extendedTextMessage?.text,
       reactionMessage: msg.message?.reactionMessage?.text,
       ephemeralMessage:
-        msg.message?.ephemeralMessage?.message?.extendedTextMessage?.text,
+        msg.message?.ephemeralMessage?.message?.extendedTextMessage?.text,      
       buttonsResponseMessage:
         msg.message.buttonsResponseMessage?.selectedDisplayText,
       listResponseMessage:
@@ -214,6 +216,7 @@ const downloadMedia = async (msg: proto.IWebMessageInfo) => {
     msg.message?.imageMessage ||
     msg.message?.viewOnceMessageV2?.message?.imageMessage ||
     msg.message?.viewOnceMessage?.message?.imageMessage ||
+    msg.message?.ephemeralMessage?.message?.imageMessage ||
     msg.message?.audioMessage ||
     msg.message?.ephemeralMessage?.message?.audioMessage ||
     msg.message?.viewOnceMessageV2?.message?.audioMessage ||
@@ -259,6 +262,7 @@ const downloadMedia = async (msg: proto.IWebMessageInfo) => {
     msg.message.imageMessage ||
     msg.message.viewOnceMessageV2?.message?.imageMessage ||
     msg.message.viewOnceMessage?.message?.imageMessage ||
+    msg.message.ephemeralMessage?.message?.imageMessage ||
 
     msg.message.stickerMessage ||
     msg.message.ephemeralMessage?.message?.stickerMessage ||
@@ -469,18 +473,14 @@ const verifyQueue = async (
 ) => {
   const { queues, greetingMessage } = await ShowWhatsAppService(wbot.id!);
 
-  if (queues.length === 0)
-  {
+  if (queues.length === 0) {
     return;
   }
-
   if (queues.length === 1) {
     await UpdateTicketService({
       ticketData: { queueId: queues[0].id },
       ticketId: ticket.id
     });
-
-    return;
   }
 
   const selectedOption =
@@ -497,7 +497,7 @@ const verifyQueue = async (
   });
 
   const botText = async () => {
-    if (choosenQueue) {
+    if (choosenQueue && queues.length > 1) {
       await UpdateTicketService({
         ticketData: { queueId: choosenQueue.id },
         ticketId: ticket.id
@@ -542,7 +542,7 @@ const verifyQueue = async (
       if (greetingMessage !== null && greetingMessage !== undefined && greetingMessage.length > 0) {
         let options = "";
 
-        if (queues.length > 0) {
+        if (queues.length > 1) {
           queues.forEach((queue, index) => {
             options += `*${index + 1}* - ${queue.name}\n`;
           });
@@ -775,6 +775,7 @@ const handleMessage = async (
       msg.message?.imageMessage ||
       msg.message?.viewOnceMessageV2?.message?.imageMessage ||
       msg.message?.viewOnceMessage?.message?.imageMessage ||
+      msg.message?.ephemeralMessage?.message?.imageMessage ||
       msg.message?.audioMessage ||
       msg.message?.ephemeralMessage?.message?.audioMessage ||
       msg.message?.viewOnceMessageV2?.message?.audioMessage ||
