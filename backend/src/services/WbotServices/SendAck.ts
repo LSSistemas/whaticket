@@ -8,14 +8,11 @@ import ShowTicketService from "../TicketServices/ShowTicketService";
 export const SendAckBYticketId = async ({ ticketId}): Promise<Response> => {
     const ticket = await ShowTicketService(ticketId);
     let unreadMessages = ticket.unreadMessages;
-    //console.log("UnreadMessages: ", ticket);
     if (unreadMessages > 0) {
 
-        //console.log("Existem mensagens não lidas");
         let wbot;
         try {
             wbot = await GetTicketWbot(ticket);
-            //console.log(wbot);
 
         } catch (error) {
             console.log("não consegui pegar o wbot")
