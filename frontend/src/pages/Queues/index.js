@@ -139,7 +139,7 @@ const Queues = () => {
 
 
   const handleCloseQueueModal = () => {
-    console.log('fechou modal')
+    //console.log('fechou modal')
     setQueueModalOpen(false);
     setSelectedQueue(null);
   };

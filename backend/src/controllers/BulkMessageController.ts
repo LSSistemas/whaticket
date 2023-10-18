@@ -60,14 +60,14 @@ export const index = async (req: Request, res: Response): Promise<Response> => {
 
   try {
     let contactAndTicket: Ticket;
-    console.log(typeof whatsappId);
+    //console.log(typeof whatsappId);
     if (whatsappId && typeof whatsappId === "number") {
       contactAndTicket = await FindOrCreateTicketService({
         contact,
         whatsappId,
         channel: "whatsapp"
       });
-      console.log("conexão definida.");
+      //console.log("conexão definida.");
     } else {
       const random = await GetRandWhatsApp();
 
@@ -75,7 +75,7 @@ export const index = async (req: Request, res: Response): Promise<Response> => {
         throw new AppError("ERR_NO_DEF_WAPP_FOUND");
       }
 
-      console.log("conexão random");
+      //console.log("conexão random");
 
       contactAndTicket = await FindOrCreateTicketService({
         contact,
@@ -116,7 +116,7 @@ export const index = async (req: Request, res: Response): Promise<Response> => {
         console.log("number not found");
       }
 
-      console.log(isNumberExit);
+      //console.log(isNumberExit);
 
       setTimeout(async () => {
         try {
@@ -127,9 +127,9 @@ export const index = async (req: Request, res: Response): Promise<Response> => {
 
           await verifyMessage(send, contactAndTicket, contact, message);
         } catch (err) {
-          console.log(
-            `Mensagem não enviada para o contato. ${isNumberExit[0]?.jid}`
-          );
+          // console.log(
+          //   `Mensagem não enviada para o contato. ${isNumberExit[0]?.jid}`
+          // );
         }
       }, 1000 * 5);
     }

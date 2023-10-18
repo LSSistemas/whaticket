@@ -62,7 +62,7 @@ const getBodyButton = (msg: proto.IWebMessageInfo): string => {
     let bodyMessage = `*${msg?.message?.buttonsMessage?.contentText}*`;
     // eslint-disable-next-line no-restricted-syntax
     for (const buton of msg.message?.buttonsMessage?.buttons) {
-      console.log(buton);
+      //console.log(buton);
       bodyMessage += `\n\n${buton.buttonText?.displayText}`;
     }
     return bodyMessage;
@@ -82,12 +82,22 @@ const getBodyButton = (msg: proto.IWebMessageInfo): string => {
   }
 };
 
+const getAd = (msg: proto.IWebMessageInfo): string => {
+  if (msg.key.fromMe && msg.message?.listResponseMessage?.contextInfo?.externalAdReply) {
+    let bodyMessage = `*${msg.message?.listResponseMessage?.contextInfo?.externalAdReply?.title}*`;
+    
+      bodyMessage += `\n\n${msg.message?.listResponseMessage?.contextInfo?.externalAdReply?.body}`;
+
+      return bodyMessage;
+  }    
+};
+
 const getViewOnceMessage = (msg: proto.IWebMessageInfo): string => {
   if (msg.key.fromMe && msg?.message?.viewOnceMessage?.message?.buttonsMessage?.contentText) {
     let bodyMessage = `*${msg?.message?.viewOnceMessage?.message?.buttonsMessage?.contentText}*`;
     // eslint-disable-next-line no-restricted-syntax
     for (const buton of msg.message?.viewOnceMessage?.message?.buttonsMessage?.buttons) {
-      console.log(buton);
+      //console.log(buton);
       bodyMessage += `\n\n${buton.buttonText?.displayText}`;
     }
     return bodyMessage;
@@ -141,7 +151,8 @@ export const getBodyMessage = (msg: proto.IWebMessageInfo): string | null => {
       liveLocationMessage: `Latitude: ${msg.message.liveLocationMessage?.degreesLatitude} - Longitude: ${msg.message.liveLocationMessage?.degreesLongitude}`,
       documentMessage: msg.message.documentMessage?.title,
       audioMessage: "Áudio",
-      listMessage: getBodyButton(msg) || msg.message.listResponseMessage?.title
+      listMessage: getBodyButton(msg) || msg.message.listResponseMessage?.title,
+      advertising: getAd(msg) || msg.message?.listResponseMessage?.contextInfo?.externalAdReply?.title,
     };
 
     const objKey = Object.keys(types).find(key => key === type);
@@ -460,7 +471,8 @@ const isValidMsg = (msg: proto.IWebMessageInfo): boolean => {
     msgType === "protocolMessage" ||
     msgType === "listResponseMessage" ||
     msgType === "listMessage" ||
-    msgType === "viewOnceMessage";
+    msgType === "viewOnceMessage" ||
+    msgType === "advertising";
 
   return !!ifType;
 };
@@ -804,7 +816,8 @@ const handleMessage = async (
         msgType !== "extendedTextMessage" &&
         msgType !== "vcard" &&
         msgType !== "reactionMessage" &&
-        msgType !== "protocolMessage"
+        msgType !== "protocolMessage" &&
+        msgType !== "advertising"
       )
         return;
 

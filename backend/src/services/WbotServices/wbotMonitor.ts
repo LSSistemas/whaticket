@@ -35,7 +35,7 @@ const wbotMonitor = async (
 
       if (content.tag === "offer") {
         const { from, id } = node.attrs;
-        console.log(`${from} is calling you with id ${id}`);
+        //console.log(`${from} is calling you with id ${id}`);
       }
 
       if (content.tag === "terminate") {
@@ -44,7 +44,7 @@ const wbotMonitor = async (
         });
 
         if (sendMsgCall.value === "disabled") {
-          console.log("Mensagem Automática");
+          //console.log("Mensagem Automática");
            await wbot.sendMessage(node.attrs.from, {
              text: "*Mensagem Automática:*\nAs chamadas de voz e vídeo estão desabilitas para esse WhatsApp, favor enviar uma mensagem de texto. Obrigado"
            });
@@ -91,7 +91,7 @@ const wbotMonitor = async (
     });
 
     wbot.ev.on("contacts.upsert", async (contacts: BContact[]) => {
-      console.log("upsert", contacts);
+      //console.log("upsert", contacts);
       await createOrUpdateBaileysService({
         whatsappId: whatsapp.id,
         contacts

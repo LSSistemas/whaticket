@@ -16,7 +16,7 @@ const useProvideSocket = () => {
 
   React.useMemo(() => {
     socket.on("connect", () => {
-      console.log("connected");
+      //console.log("connected");
     });
   }, [socket]);
 

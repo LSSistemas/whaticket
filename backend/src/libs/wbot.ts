@@ -87,7 +87,6 @@ export const initWbot = async (whatsapp: Whatsapp): Promise<Session> => {
               logger: loggerBaileys,
               printQRInTerminal: false,
               auth: state as AuthenticationState,
-			        linkPreviewImageThumbnailWidth: 192,
               generateHighQualityLinkPreview: true,
               version,
               patchMessageBeforeSending: (message) => {

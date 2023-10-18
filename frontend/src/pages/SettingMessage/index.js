@@ -70,7 +70,7 @@ const ConfigMessage = () => {
 
 
   useEffect(() => {
-    console.log('mudou', selectedQueueIds)
+    //console.log('mudou', selectedQueueIds)
 
     setValues({
       limit: "",
@@ -81,7 +81,7 @@ const ConfigMessage = () => {
 
     if(!selectedQueueIds) return
     api.get(`/settingsMessage/${selectedQueueIds}`).then((response) => {
-      console.log('response', response.data)
+      //console.log('response', response.data)
       setValues({
         limit: response.data.limit,
         minutes: response.data.minutes,
@@ -126,7 +126,7 @@ const ConfigMessage = () => {
       toastError(err);
     }
 
-    console.log(data);
+    //console.log(data);
   }
 
   useEffect(() => {

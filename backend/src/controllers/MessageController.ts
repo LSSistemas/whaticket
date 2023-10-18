@@ -67,7 +67,7 @@ export const store = async (req: Request, res: Response): Promise<Response> => {
     }
 
     if (ticket.channel === "facebook" || ticket.channel === "instagram") {
-      console.log("facebook");
+      //console.log("facebook");
       await sendFaceMessage({ body, ticket, quotedMsg });
     }
   }

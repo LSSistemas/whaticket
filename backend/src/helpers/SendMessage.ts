@@ -24,7 +24,7 @@ export const SendMessage = async (
     const jid = `${messageData.number}@s.whatsapp.net`;
     let message: any;
     const body = `\u200e${messageData.body}`;
-    console.log("envio de mensagem");
+    //console.log("envio de mensagem");
     if (messageData.mediaPath) {
 
       const media = {

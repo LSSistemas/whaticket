@@ -60,7 +60,7 @@ const reducer = (state, action) => {
 
   if (action.type === "DELETE_MASS_MESSAGE") {
     const massMessageId = action.payload;
-    console.log(massMessageId);
+    //console.log(massMessageId);
     const quickAnswerIndex = state.findIndex((q) => q.id === massMessageId);
     if (quickAnswerIndex !== -1) {
       state.splice(quickAnswerIndex, 1);
@@ -130,7 +130,7 @@ const QuickAnswers = () => {
       }
 
       if (data.action === "delete") {
-        console.log("delete");
+        //console.log("delete");
         dispatch({
           type: "DELETE_MASS_MESSAGE",
           payload: +data.scheduleRecord,

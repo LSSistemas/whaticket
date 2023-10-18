@@ -102,7 +102,7 @@ export const verifyMessageMedia = async (
 
   await CreateMessageService({ messageData });
 
-  console.log(msg);
+  //console.log(msg);
   await ticket.update({
     lastMessage: msg.text
   });

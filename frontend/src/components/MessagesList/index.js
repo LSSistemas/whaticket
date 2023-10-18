@@ -445,7 +445,7 @@ const MessagesList = ({ ticketId, isGroup }) => {
   };
 
   const checkMessageMedia = (message) => {
-    console.log(message);
+    //console.log(message);
 	if(message.mediaType === "locationMessage" && message.body.split('|').length >= 2) {
 		let locationParts = message.body.split('|')
 		let imageLocation = locationParts[0]		
@@ -493,7 +493,7 @@ const MessagesList = ({ ticketId, isGroup }) => {
         />
       );
   } else {
-      console.log(message) 
+      //console.log(message) 
   
       return (
         <>

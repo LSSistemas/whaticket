@@ -15,7 +15,7 @@ export const SendAckBYticketId = async ({ ticketId}): Promise<Response> => {
             wbot = await GetTicketWbot(ticket);
 
         } catch (error) {
-            console.log("não consegui pegar o wbot")
+            //console.log("não consegui pegar o wbot")
         }
 
         if (!ticket) {

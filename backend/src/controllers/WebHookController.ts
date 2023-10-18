@@ -33,7 +33,7 @@ export const webHook = async (
       channel = "instagram";
     }
 
-    console.log(body);
+    //console.log(body);
     body.entry?.forEach((entry: any) => {
       entry.messaging?.forEach((data: any) => {
         handleMessage(data, channel);

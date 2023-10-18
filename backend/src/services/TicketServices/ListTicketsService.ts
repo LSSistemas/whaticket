@@ -79,7 +79,7 @@ const ListTicketsService = async ({
        whereCondition = { queueId: { [Op.or]: [queueIds, null] } };
      }
   } else {
-    console.log("passei aqui");
+    //console.log("passei aqui");
     whereCondition = { queueId: { [Op.or]: [queueIds] } };
   }
   

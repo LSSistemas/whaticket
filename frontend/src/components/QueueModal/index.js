@@ -142,8 +142,8 @@ const QueueModal = ({ open, onClose, queueId, onEdit }) => {
   }, [queueId, open]);
 
   useEffect(() => {
-    console.log(activeStep);
-    console.log(isNameEdit);
+    //console.log(activeStep);
+    //console.log(isNameEdit);
 
     if (activeStep === isNameEdit) {
       setIsStepContent(false);

@@ -324,7 +324,7 @@ export const sayChatbot = async (
     getBodyMessage(msg);
 
 
-    console.log('Selecionado a opção: ', selectedOption);
+    //console.log('Selecionado a opção: ', selectedOption);
 
   if (!queueId && selectedOption && msg.key.fromMe) return;
 
@@ -343,7 +343,7 @@ export const sayChatbot = async (
     msg?.message?.listResponseMessage?.singleSelectReply.selectedRowId ||
       getBodyMessage(msg);
 
-     console.log("!getStageBot", selectedOption);
+     //console.log("!getStageBot", selectedOption);
     const choosenQueue = queue.chatbots[+selectedOption - 1];
 
     if (!choosenQueue?.greetingMessage) {
@@ -379,13 +379,13 @@ export const sayChatbot = async (
   if (getStageBot) {
     const selected = isNumeric(selectedOption) ? selectedOption : 1;
     const bots = await ShowChatBotServices(getStageBot.chatbotId);
-    console.log("getStageBot", selected);
+    //console.log("getStageBot", selected);
 
     const choosenQueue = bots.options[+selected - 1]
       ? bots.options[+selected - 1]
       : bots.options[0];
 
-      console.log("choosenQueue", choosenQueue);
+      //console.log("choosenQueue", choosenQueue);
 
     if (!choosenQueue.greetingMessage) {
       await DeleteDialogChatBotsServices(contact.id);

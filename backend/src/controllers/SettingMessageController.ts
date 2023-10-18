@@ -20,7 +20,7 @@ export const index = async (req: Request, res: Response): Promise<Response> => {
 
 export const show = async (req: Request, res: Response): Promise<Response> => {
   const { whatsappId } = req.params;
-  console.log(whatsappId);
+  //console.log(whatsappId);
   const settings = await ShowSettingsService(whatsappId);
 
   return res.status(200).json(settings);
@@ -39,7 +39,7 @@ export const store = async (req: Request, res: Response): Promise<Response> => {
   } = req.body;
 
   try {
-    console.log(req.body);
+    //console.log(req.body);
     const chatbot = await CreateSettingService({
       contact,
       limit,

@@ -99,7 +99,7 @@ const sendMessage = async (whatsappId?: number, photo?: boolean) => {
   
   if (!whatsappId || whatsappId === null || whatsappId == null || whatsappId === undefined) return;
 
-  console.log(whatsappId);
+  //console.log(whatsappId);
 
   const getMessage = await MassMessages.findOne({
     where: {
