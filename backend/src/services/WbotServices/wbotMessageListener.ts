@@ -9,9 +9,10 @@ import {
   WAMessage,
   WAMessageStubType,
   WAMessageUpdate,
-  WASocket
+  WASocket,
 } from "@WhiskeysSockets/baileys";
 import * as Sentry from "@sentry/node";
+import { v4 as uuidv4 } from 'uuid';
 import { writeFile } from "fs"; import { join } from "path";
 import { promisify } from "util";
 import { debounce } from "../../helpers/Debounce";
@@ -150,6 +151,7 @@ export const getBodyMessage = (msg: proto.IWebMessageInfo): string | null => {
       locationMessage: `Latitude: ${msg.message.locationMessage?.degreesLatitude} - Longitude: ${msg.message.locationMessage?.degreesLongitude}`,
       liveLocationMessage: `Latitude: ${msg.message.liveLocationMessage?.degreesLatitude} - Longitude: ${msg.message.liveLocationMessage?.degreesLongitude}`,
       documentMessage: msg.message.documentMessage?.title,
+      documentWithCaptionMessage: msg.message.documentWithCaptionMessage?.message?.documentMessage?.title,
       audioMessage: "Áudio",
       listMessage: getBodyButton(msg) || msg.message.listResponseMessage?.title,
       advertising: getAd(msg) || msg.message?.listResponseMessage?.contextInfo?.externalAdReply?.title,
@@ -158,8 +160,7 @@ export const getBodyMessage = (msg: proto.IWebMessageInfo): string | null => {
     const objKey = Object.keys(types).find(key => key === type);
 
     if (!objKey) {
-      logger.warn(`#### Nao achou o type: ${type}
-${JSON.stringify(msg?.message)}`);
+      logger.warn(`#### Nao achou o type: ${type} ${JSON.stringify(msg?.message)}`);
       Sentry.setExtra("Mensagem", { BodyMsg: msg.message, msg, type });
       Sentry.captureException(
         new Error("Novo Tipo de Mensagem em getTypeMessage")
@@ -241,6 +242,7 @@ const downloadMedia = async (msg: proto.IWebMessageInfo) => {
     msg.message?.viewOnceMessageV2?.message?.stickerMessage ||
     msg.message?.viewOnceMessage?.message?.stickerMessage ||
     msg.message?.documentMessage ||
+    msg.message?.documentWithCaptionMessage?.message?.documentMessage ||
     msg.message?.ephemeralMessage?.message?.documentMessage ||
     msg.message?.viewOnceMessageV2?.message?.documentMessage ||
     msg.message?.viewOnceMessage?.message?.documentMessage ||
@@ -266,6 +268,7 @@ const downloadMedia = async (msg: proto.IWebMessageInfo) => {
     msg.message.viewOnceMessage?.message?.videoMessage ||
 
     msg.message.documentMessage ||
+    msg.message.documentWithCaptionMessage?.message?.documentMessage ||
     msg.message.ephemeralMessage?.message?.documentMessage ||
     msg.message.viewOnceMessageV2?.message?.documentMessage ||
     msg.message.viewOnceMessage?.message?.documentMessage ||
@@ -295,12 +298,8 @@ const downloadMedia = async (msg: proto.IWebMessageInfo) => {
     throw new Error("ERR_WAPP_DOWNLOAD_MEDIA");
   }
 
-  let filename = msg.message?.documentMessage?.fileName || "";
-
-  if (!filename) {
-    const ext = mineType.mimetype.split("/")[1].split(";")[0];
-    filename = `${new Date().getTime()}.${ext}`;
-  }
+  const ext = mineType.mimetype.split("/")[1].split(";")[0];
+  let filename = `${uuidv4()}.${ext}`;
 
   const media = {
     data: buffer,
@@ -364,6 +363,7 @@ const verifyMediaMessage = async (
   ticket: Ticket,
   contact: Contact
 ): Promise<Message> => {
+
   const quotedMsg = await verifyQuotedMessage(msg);
 
   const media = await downloadMedia(msg);
@@ -456,6 +456,7 @@ const isValidMsg = (msg: proto.IWebMessageInfo): boolean => {
     msgType === "videoMessage" ||
     msgType === "imageMessage" ||
     msgType === "documentMessage" ||
+    msgType === "documentWithCaptionMessage" ||
     msgType === "stickerMessage" ||
     msgType === "buttonsResponseMessage" ||
     msgType === "buttonsMessage" ||
@@ -801,6 +802,7 @@ const handleMessage = async (
       msg.message?.viewOnceMessageV2?.message?.stickerMessage ||
       msg.message?.viewOnceMessage?.message?.stickerMessage ||
       msg.message?.documentMessage ||
+      msg.message?.documentWithCaptionMessage?.message?.documentMessage ||
       msg.message?.ephemeralMessage?.message?.documentMessage ||
       msg.message?.viewOnceMessageV2?.message?.documentMessage ||
       msg.message?.viewOnceMessage?.message?.documentMessage ||
@@ -968,18 +970,13 @@ const wbotMessageListener = async (wbot: Session): Promise<void> => {
           const messageUpsert = events['messages.upsert'];
           const messages = messageUpsert.messages
             .filter(filterMessages).map(msg => msg);
-
+       
           if (!messages) return;
 
           messages.forEach(async (message: proto.IWebMessageInfo) => {
-            if (
-              wbot.type === "md" &&
-              !message.key.fromMe &&
-              messageUpsert.type === "notify"
-            ) {
+            if (wbot.type === "md" && !message.key.fromMe && messageUpsert.type === "notify") {
               (wbot as WASocket)!.readMessages([message.key]);
-            }
-            // console.log(JSON.stringify(message));
+            }            
             handleMessage(message, wbot);
           });
 
@@ -995,6 +992,8 @@ const wbotMessageListener = async (wbot: Session): Promise<void> => {
           if (messages.length != 0) {
             messages.filter(filterMessages).map(msg => msg);
           }
+        } else {
+          console.log(events);
         }
       }
     );
