@@ -87,6 +87,8 @@ const sendDialog = async (
       }
     });
 
+    const typeBot = buttonActive?.value || "text";
+
     const botText = async () => {
       let options = "";
 
@@ -96,7 +98,7 @@ const sendDialog = async (
 
       const optionsBack =
         options.length > 0
-          ? `${options}\n*#* Voltar para o menu principal`
+          ? `${options}\n*#* Voltar ao menu principal`
           : options;
 
       if (options.length > 0) {
@@ -122,20 +124,20 @@ const sendDialog = async (
 
       if (buttons.length > 0) {
 
-      const buttonMessage = {
-        text: `\u200e${choosenQueue.greetingMessage}`,
-        buttons,
-        headerType: 1
-      };
+        const buttonMessage = {
+          text: `\u200e${choosenQueue.greetingMessage}`,
+          buttons,
+          headerType: 1
+        };
 
-      const send = await wbot.sendMessage(
-        `${contact.number}@${ticket.isGroup ? "g.us" : "s.whatsapp.net"}`,
-        buttonMessage
-      );
+        const send = await wbot.sendMessage(
+          `${contact.number}@${ticket.isGroup ? "g.us" : "s.whatsapp.net"}`,
+          buttonMessage
+        );
 
-      await verifyMessage(send, ticket, contact);
+        await verifyMessage(send, ticket, contact);
 
-      return send;
+        return send;
       }
 
       const body = `\u200e${choosenQueue.greetingMessage}`;
@@ -184,19 +186,19 @@ const sendDialog = async (
       return send;
     };
 
-    if (buttonActive.value === "text") {
+    if (typeBot === "text") {
       return await botText();
     }
 
-    if (buttonActive.value === "button" && showChatBots.options.length > 4) {
+    if (typeBot === "button" && showChatBots.options.length > 4) {
       return await botText();
     }
 
-    if (buttonActive.value === "button" && showChatBots.options.length <= 4) {
+    if (typeBot === "button" && showChatBots.options.length <= 4) {
       return await botButton();
     }
 
-    if (buttonActive.value === "list") {
+    if (typeBot === "list") {
       return await botList();
     }
   }
