@@ -466,15 +466,15 @@ const MessagesList = ({ ticketId, isGroup }) => {
 			const v = array[index];
 			let values = v.split(":");
 			for (let ind = 0; ind < values.length; ind++) {
-				if (values[ind].indexOf("+") !== -1) {
-					obj.push({ number: values[ind] });
+				if (values[ind].startsWith("TEL")) {
+					obj.push({ number: values[values.length -1] });
 				}
 				if (values[ind].indexOf("FN") !== -1) {
 					contact = values[ind + 1];
 				}
 			}
 		}
-		return <VcardPreview contact={contact} numbers={obj[0].number} />
+		return <VcardPreview contact={contact} numbers={obj[0]?.number} />
 	} 
   else if (message.mediaType === "image") {
       return <ModalImageCors imageUrl={message.mediaUrl} />;
