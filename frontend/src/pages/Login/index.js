@@ -28,7 +28,7 @@ const Copyright = () => {
       © {new Date().getFullYear()}
       {" - "}
       <Link color="inherit" href="#">
-        Whaticket - v {versionSystem}
+        OW.SAC - v {versionSystem}
       </Link>
       {"."}
     </Typography>
