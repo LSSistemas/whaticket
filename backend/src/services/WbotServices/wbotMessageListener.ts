@@ -133,7 +133,7 @@ export const getBodyMessage = (msg: proto.IWebMessageInfo): string | null => {
       extendedTextMessage: msg.message.extendedTextMessage?.text,
       reactionMessage: msg.message?.reactionMessage?.text,
       ephemeralMessage:
-        msg.message?.ephemeralMessage?.message?.extendedTextMessage?.text,      
+        msg.message?.ephemeralMessage?.message?.extendedTextMessage?.text,
       buttonsResponseMessage:
         msg.message.buttonsResponseMessage?.selectedDisplayText,
       listResponseMessage:
@@ -816,6 +816,7 @@ const handleMessage = async (
         !hasMedia &&
         msgType !== "conversation" &&
         msgType !== "extendedTextMessage" &&
+        msgType !== "ephemeralMessage" &&
         msgType !== "vcard" &&
         msgType !== "reactionMessage" &&
         msgType !== "protocolMessage" &&
