@@ -1,0 +1,8 @@
+Essa provavelmente não é a forma ideal mas só dessa forma consegui rodar o build no backend. Estou usando a versao do node v16.18.1 e npm 8.19.2
+Mudei a versão do typescript para 4.1 depois executei os seguintes comandos no backend:
+npm install
+npm run build
+npm r pino-pretty
+rm -rf dist/
+npm i pino-pretty
+npm run build
