@@ -133,7 +133,8 @@ export const getBodyMessage = (msg: proto.IWebMessageInfo): string | null => {
       extendedTextMessage: msg.message.extendedTextMessage?.text,
       reactionMessage: msg.message?.reactionMessage?.text,
       ephemeralMessage:
-        msg.message?.ephemeralMessage?.message?.extendedTextMessage?.text,
+        msg.message?.ephemeralMessage?.message?.extendedTextMessage?.text ||
+        msg.message?.ephemeralMessage?.message?.imageMessage?.caption,
       buttonsResponseMessage:
         msg.message.buttonsResponseMessage?.selectedDisplayText,
       listResponseMessage:
@@ -389,6 +390,7 @@ const verifyMediaMessage = async (
   }
 
   const body = getBodyMessage(msg);
+
   const messageData = {
     id: msg.key.id,
     ticketId: ticket.id,
@@ -475,7 +477,16 @@ const isValidMsg = (msg: proto.IWebMessageInfo): boolean => {
     msgType === "viewOnceMessage" ||
     msgType === "advertising";
 
-  return !!ifType;
+    if (msgType === "ephemeralMessage")
+    {
+      // Acessar o valor de 'type'
+      const typeValue = msg.message.ephemeralMessage?.message?.protocolMessage?.type;
+      if (typeValue === proto.Message.ProtocolMessage.Type.EPHEMERAL_SETTING) {
+        return false;
+      }
+    }
+
+    return !!ifType;
 };
 
 const verifyQueue = async (
@@ -812,6 +823,7 @@ const handleMessage = async (
       if (/\u200e/.test(bodyMessage)) {
         bodyMessage = bodyMessage.replace(/\u200e/, '');
       };
+
       if (
         !hasMedia &&
         msgType !== "conversation" &&

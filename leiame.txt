@@ -1,0 +1,85 @@
+Duplicar a API
+git clone git@github.com:lsergiozq/whatowapi.git
+
+git clone https://github.com/LSSistemas/whaticket.git
+
+na registro.br criar dns para o dominio principal e para api
+
+configurar os .env  
+	. atenção para o número da porta
+
+npm r pino-pretty
+npm i pino-pretty
+npm run build
+
+============================
+cd backend
+
+pm2 start dist/server.js --name ps-backend
+
+criar um arquivo
+/etc/nginx/sites-available/whaticketps-backend
+
+-----
+server {
+  server_name hoeapi.ow.app.br;
+
+  location / {
+    proxy_pass http://127.0.0.1:9004;
+    proxy_http_version 1.1;
+    proxy_set_header Upgrade $http_upgrade;
+    proxy_set_header Connection 'upgrade';
+    proxy_set_header Host $host;
+    proxy_set_header X-Real-IP $remote_addr;
+    proxy_set_header X-Forwarded-Proto $scheme;
+    proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
+    proxy_cache_bypass $http_upgrade;
+  }
+}
+-------
+
+fazer a copia
+ln -s /etc/nginx/sites-available/whaticketps-backend /etc/nginx/sites-enabled
+
+============================
+
+============================
+cd frontent
+
+antes de compilar, alterar o arquiv server.js e informar a porta que será configurada
+
+pm2 start server.js --name ps-frontend
+pm2 save
+
+
+criar o arquivo /etc/nginx/sites-available/whaticketps-frontend
+
+----
+server {
+  server_name hoe.ow.app.br;
+
+  location / {
+    proxy_pass http://127.0.0.1:4004;
+    proxy_http_version 1.1;
+    proxy_set_header Upgrade $http_upgrade;
+    proxy_set_header Connection 'upgrade';
+    proxy_set_header Host $host;
+    proxy_set_header X-Real-IP $remote_addr;
+    proxy_set_header X-Forwarded-Proto $scheme;
+    proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
+    proxy_cache_bypass $http_upgrade;
+  }
+}
+----
+
+fazer a copia
+ln -s /etc/nginx/sites-available/whaticketps-frontend /etc/nginx/sites-enabled
+
+
+
+============================
+
+certbot -m 'lsergio@lssistemas.com.br' --nginx --agree-tos --non-interactive --domains psapi.ow.app.br,ps.ow.app.br
+
+
+

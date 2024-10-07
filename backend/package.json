@@ -17,7 +17,7 @@
   "author": "",
   "license": "MIT",
   "dependencies": {
-    "@WhiskeysSockets/baileys": "github:WhiskeysSockets/Baileys",
+    "@WhiskeysSockets/baileys": "github:lsergiozq/Baileys.git#CustomBaileys",
     "@adiwajshing/keyed-db": "^0.2.4",
     "@ffmpeg-installer/ffmpeg": "^1.1.0",
     "@google-cloud/dialogflow": "^4.7.0",
