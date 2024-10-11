@@ -138,12 +138,14 @@ export function startQueueProcess() {
   //   sendScheduledMessages.clean(100, status);
   // }
 
+  scheduleMonitor.clean(1000 * 60 * 60 * 24); // Remove jobs completados com mais de 24 horas
+
   scheduleMonitor.add(
     "Verify",
     {},
     {
       repeat: { cron: "*/5 * * * * *" },
-      removeOnComplete: false
+      removeOnComplete: true
     }
   );
 }
