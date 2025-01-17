@@ -67,9 +67,11 @@ export async function importeDevice(
     creds.signedPreKey.keyId.toString() || null,
     creds.registrationId.toString() || null,
     creds.advSecretKey || null,
+    creds.processedHistoryMessages.toString() || null,
     creds.nextPreKeyId.toString() || null,
     creds.firstUnuploadedPreKeyId.toString() || null,
     creds.accountSyncCounter.toString() || null,
+    creds.accountSettings.toString() || null,
     creds.pairingCode || null,
     creds.lastPropHash || null,
     creds.routingInfo || null,
@@ -80,6 +82,7 @@ export async function importeDevice(
     creds.account?.accountSignatureKey || null,
     creds.account?.accountSignature || null,
     creds.account?.deviceSignature || null,
+    creds.signalIdentities.toString() || null,
     creds?.platform || null,
     creds?.lastAccountSyncTimestamp.toString() || null,
     creds?.myAppStateKeyId || null,
@@ -110,9 +113,11 @@ export async function importeDevice(
         signed_pre_key_id,
         registration_id,
         adv_secret_key,
+        processed_history_messages,
         next_pre_key_id,
         first_unuploaded_pre_key_id,
         account_sync_counter,
+        account_settings,
         pairing_code,
         last_prop_hash,
         routing_info,
@@ -123,13 +128,15 @@ export async function importeDevice(
         account_signature_key,
         account_signature,
         account_device_signature,
+        signalIdentities,
         platform,
         last_account_sync_timestamp,
         my_app_state_key_id,
         status,
         created_at,
         updated_at
-      ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
+      ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
+
       `,
       values
     );
