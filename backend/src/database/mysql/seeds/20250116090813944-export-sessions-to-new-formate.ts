@@ -57,20 +57,7 @@ export async function importeDevice(
   const values = [
     whatsappId.toString(),
     creds.noiseKey.public || null,
-    creds.noiseKey.private || null,
-    creds.pairingEphemeralKeyPair.public || null,
-    creds.pairingEphemeralKeyPair.private || null,
-    creds.signedIdentityKey.public || null,
-    creds.signedIdentityKey.private || null,
-    creds.signedPreKey.keyPair.public || null,
-    creds.signedPreKey.keyPair.private || null,
-    creds.signedPreKey.signature || null,
-    creds.signedPreKey.keyId.toString() || null,
-    creds.registrationId.toString() || null,
-    creds.advSecretKey || null,
-    creds.processedHistoryMessages || null,
-    creds.nextPreKeyId.toString() || null,
-    creds.firstUnuploadedPreKeyId.toString() || null    
+    creds.noiseKey.private || null
   ];
 
   try {
@@ -79,21 +66,8 @@ export async function importeDevice(
       INSERT INTO devices (
         whatsapp_id,
         noise_key_public,
-        noise_key_private,
-        pairing_ephemeral_key_pair_public,
-        pairing_ephemeral_key_pair_private,
-        signed_identity_key_public,
-        signed_identity_key_private,
-        signed_pre_key_public,
-        signed_pre_key_private,
-        signed_pre_key_signature,
-        signed_pre_key_id,
-        registration_id,
-        adv_secret_key,
-        processed_history_messages,
-        next_pre_key_id,
-        first_unuploaded_pre_key_id       
-      ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
+        noise_key_private             
+      ) VALUES (?, ?, ?)
       `,
       values
     );
