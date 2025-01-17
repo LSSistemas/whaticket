@@ -64,7 +64,12 @@ export async function importeDevice(
     creds.signedPreKey.keyPair.public || null,
     creds.signedPreKey.keyPair.private || null,
     creds.signedPreKey.signature || null,
-    creds.signedPreKey.keyId.toString() || null
+    creds.signedPreKey.keyId.toString() || null,
+    creds.registrationId.toString() || null,
+    creds.advSecretKey || null,
+    creds.processedHistoryMessages || null,
+    creds.nextPreKeyId.toString() || null,
+
   ];
 
   try {
@@ -80,8 +85,12 @@ export async function importeDevice(
         signed_pre_key_public,
         signed_pre_key_private,
         signed_pre_key_signature,
-        signed_pre_key_id           
-      ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
+        signed_pre_key_id,
+        registration_id,
+        adv_secret_key,
+        processed_history_messages,
+        next_pre_key_id           
+      ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
       `,
       values
     );
