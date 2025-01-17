@@ -9,7 +9,9 @@ export const MySqlHelper = {
       user: process.env.MYSQL_USER ?? "root",
       password: process.env.MYSQL_PASSWORD ?? "password",
       database: process.env.MYSQL_DATABASE ?? "database",
-      charset: "utf8mb4_0900_ai_ci"
+      charset: "utf8mb4",
+      debug: true,
+      flags: ['--no-named-keys']
     });
   },
 
