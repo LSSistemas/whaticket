@@ -4,7 +4,7 @@
 /* eslint-disable no-await-in-loop */
 import dotenv from "dotenv";
 import mysql from "mysql2/promise";
-import { AuthenticationCreds, BufferJSON } from "baileys";
+import { AuthenticationCreds, BufferJSON, Buffer } from "baileys";
 import { MySqlHelper } from "../mysql-helper";
 import { createDevice } from "../repositories/device-repository";
 
@@ -55,47 +55,47 @@ export async function importeDevice(
   whatsappId: number
 ): Promise<void> {
   const values = [
-    whatsappId.toString(),
-    creds.noiseKey.public.toString() || null,
-    creds.noiseKey.private.toString() || null,
-    creds.pairingEphemeralKeyPair.public.toString() || null,
-    creds.pairingEphemeralKeyPair.private.toString() || null,
-    creds.signedIdentityKey.public.toString() || null,
-    creds.signedIdentityKey.private.toString() || null,
-    creds.signedPreKey.keyPair.public.toString() || null,
-    creds.signedPreKey.keyPair.private.toString() || null,
-    creds.signedPreKey.signature.toString() || null,
-    creds.signedPreKey.keyId.toString() || null,
-    creds.registrationId.toString() || null,
-    creds.advSecretKey.toString() || null,
-    creds.processedHistoryMessages.toString() || null,
-    creds.nextPreKeyId.toString() || null,
-    creds.firstUnuploadedPreKeyId.toString() || null,
-    creds.accountSyncCounter.toString() || null,
-    creds.accountSettings.toString() || null,
-    creds.pairingCode.toString() || null,
-    creds.lastPropHash.toString() || null,
-    creds.routingInfo.toString() || null,
-    creds.me.id.toString() || null,
-    creds.me.lid.toString() || null,
-    creds.me.name.toString() || null,
-    creds.account?.details.toString() || null,
-    creds.account?.accountSignatureKey.toString() || null,
-    creds.account?.accountSignature.toString() || null,
-    creds.account?.deviceSignature.toString() || null,
-    creds.signalIdentities.toString() || null,
-    creds?.platform .toString()|| null,
-    creds?.lastAccountSyncTimestamp.toString() || null,
-    creds?.myAppStateKeyId.toString() || null,
-    "1",
-    new Date().toISOString().replace("T", " ").slice(0, 23),
-    new Date().toISOString().replace("T", " ").slice(0, 23)
+    whatsappId,
+    Buffer.from(creds.noiseKey.public || "", "utf-8"),
+    Buffer.from(creds.noiseKey.private || "", "utf-8"),
+    Buffer.from(creds.pairingEphemeralKeyPair.public || "", "utf-8"),
+    Buffer.from(creds.pairingEphemeralKeyPair.private || "", "utf-8"),
+    Buffer.from(creds.signedIdentityKey.public || "", "utf-8"),
+    Buffer.from(creds.signedIdentityKey.private || "", "utf-8"),
+    Buffer.from(creds.signedPreKey.keyPair.public || "", "utf-8"),
+    Buffer.from(creds.signedPreKey.keyPair.private || "", "utf-8"),
+    Buffer.from(creds.signedPreKey.signature || "", "utf-8"),
+    creds.signedPreKey.keyId || null,
+    creds.registrationId || null,
+    creds.advSecretKey || null,
+    JSON.stringify(creds.processedHistoryMessages) || null,
+    creds.nextPreKeyId || null,
+    creds.firstUnuploadedPreKeyId || null,
+    creds.accountSyncCounter || null,
+    JSON.stringify(creds.accountSettings) || null,
+    creds.pairingCode || null,
+    creds.lastPropHash || null,
+    creds.routingInfo ? Buffer.from(creds.routingInfo, "utf-8") : null,
+    creds.me?.id || null,
+    creds.me?.lid || null,
+    creds.me?.name || null,
+    Buffer.from(creds.account?.details || "", "utf-8"),
+    Buffer.from(creds.account?.accountSignatureKey || "", "utf-8"),
+    Buffer.from(creds.account?.accountSignature || "", "utf-8"),
+    Buffer.from(creds.account?.deviceSignature || "", "utf-8"),
+    JSON.stringify(creds.signalIdentities) || null,
+    creds.platform || null,
+    creds.lastAccountSyncTimestamp || null,
+    creds.myAppStateKeyId || null,
+    1,
+    new Date().toISOString().slice(0, 19).replace("T", " "),
+    new Date().toISOString().slice(0, 19).replace("T", " ")
   ];
 
   console.log("Values", values);
 
   try {
-    await MySqlHelper.exec(
+    await MySqlHelper.query(
       `
       INSERT INTO devices (
         whatsapp_id,
