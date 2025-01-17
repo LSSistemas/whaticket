@@ -72,7 +72,7 @@ export async function importeDevice(
     creds.nextPreKeyId.toString() || null,
     creds.firstUnuploadedPreKeyId.toString() || null,
     creds.accountSyncCounter.toString() || null,
-    creds.accountSettings || null,
+    creds.accountSettings.toString() || null,
     creds.pairingCode || null,
     creds.lastPropHash || null,
     creds.routingInfo || null,
