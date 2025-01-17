@@ -87,9 +87,7 @@ export async function importeDevice(
     creds?.platform || null,
     creds?.lastAccountSyncTimestamp.toString() || null,
     creds?.myAppStateKeyId || null,
-    "1",
-    new Date().toISOString().replace("T", " ").slice(0, 23),
-    new Date().toISOString().replace("T", " ").slice(0, 23)
+    "1"
   ];
 
   console.log("Values", values);
@@ -130,10 +128,8 @@ export async function importeDevice(
         platform,
         last_account_sync_timestamp,
         my_app_state_key_id,
-        status,
-        created_at,
-        updated_at
-      ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
+        status
+      ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
       `,
       values
     );
