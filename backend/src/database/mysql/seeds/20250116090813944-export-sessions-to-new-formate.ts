@@ -32,7 +32,6 @@ export const exportSessionsToNewFormate = async () => {
       }
       const { creds } = JSON.parse(session, BufferJSON.reviver);
 
-      console.log("Creds", JSON.stringify(creds));
       if (!creds) {
         console.error(`
           credenciais não encontradas para o whatsapp ${whatsapp.id}`
@@ -57,7 +56,12 @@ export async function importeDevice(
   const values = [
     whatsappId.toString(),
     creds.noiseKey.public || null,
-    creds.noiseKey.private || null
+    creds.noiseKey.private || null,
+    creds.pairingEphemeralKeyPair.public || null,
+    creds.pairingEphemeralKeyPair.private || null,
+    creds.signedIdentityKey.public || null,
+    creds.signedIdentityKey.private || null,
+
   ];
 
   try {
@@ -66,8 +70,12 @@ export async function importeDevice(
       INSERT INTO devices (
         whatsapp_id,
         noise_key_public,
-        noise_key_private             
-      ) VALUES (?, ?, ?)
+        noise_key_private,pairing_ephemeral_key_pair_public,
+        pairing_ephemeral_key_pair_private,
+        signed_identity_key_public,
+        signed_identity_key_private,
+           
+      ) VALUES (?, ?, ?,?, ?, ?, ?)
       `,
       values
     );
