@@ -31,8 +31,7 @@ export const exportSessionsToNewFormate = async () => {
         continue;
       }
       const { creds } = JSON.parse(session, BufferJSON.reviver);
-
-      console.log("Creds", JSON.stringify(creds));
+      
       if (!creds) {
         console.error(
           `credenciais não encontradas para o whatsapp ${whatsapp.id}`
@@ -92,7 +91,7 @@ export async function importeDevice(
     new Date().toISOString().replace("T", " ").slice(0, 23)
   ];
 
-  console.log("Values", JSON.stringify(values));
+  console.log("Values", values);
 
   try {
     await MySqlHelper.exec(
