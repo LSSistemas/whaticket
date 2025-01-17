@@ -73,8 +73,7 @@ export async function importeDevice(
         noise_key_private,pairing_ephemeral_key_pair_public,
         pairing_ephemeral_key_pair_private,
         signed_identity_key_public,
-        signed_identity_key_private,
-           
+        signed_identity_key_private           
       ) VALUES (?, ?, ?,?, ?, ?, ?)
       `,
       values
