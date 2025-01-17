@@ -88,7 +88,9 @@ export async function importeDevice(
     new Date().toISOString().replace("T", " ").slice(0, 23)
   ];
 
-
+  console.log(creds.processedHistoryMessages || null);
+  console.log(creds.accountSettings || null);
+  console.log(creds.signalIdentities || null);
 
   
   try {
