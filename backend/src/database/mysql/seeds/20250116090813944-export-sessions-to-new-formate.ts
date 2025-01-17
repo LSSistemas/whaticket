@@ -56,38 +56,40 @@ export async function importeDevice(
 ): Promise<void> {
   const values = [
     whatsappId.toString(),
-    creds.noiseKey.public || null,
-    creds.noiseKey.private || null,
-    creds.pairingEphemeralKeyPair.public || null,
-    creds.pairingEphemeralKeyPair.private || null,
-    creds.signedIdentityKey.public || null,
-    creds.signedIdentityKey.private || null,
-    creds.signedPreKey.keyPair.public || null,
-    creds.signedPreKey.keyPair.private || null,
-    creds.signedPreKey.signature || null,
+    creds.noiseKey.public.toString() || null,
+    creds.noiseKey.private.toString() || null,
+    creds.pairingEphemeralKeyPair.public.toString() || null,
+    creds.pairingEphemeralKeyPair.private.toString() || null,
+    creds.signedIdentityKey.public.toString() || null,
+    creds.signedIdentityKey.private.toString() || null,
+    creds.signedPreKey.keyPair.public.toString() || null,
+    creds.signedPreKey.keyPair.private.toString() || null,
+    creds.signedPreKey.signature.toString() || null,
     creds.signedPreKey.keyId.toString() || null,
     creds.registrationId.toString() || null,
-    creds.advSecretKey || null,
-    creds.processedHistoryMessages || null,
+    creds.advSecretKey.toString() || null,
+    creds.processedHistoryMessages.toString() || null,
     creds.nextPreKeyId.toString() || null,
     creds.firstUnuploadedPreKeyId.toString() || null,
     creds.accountSyncCounter.toString() || null,
     creds.accountSettings.toString() || null,
-    creds.pairingCode || null,
-    creds.lastPropHash || null,
-    creds.routingInfo || null,
-    creds.me.id || null,
-    creds.me.lid || null,
-    creds.me.name || null,
-    creds.account?.details || null,
-    creds.account?.accountSignatureKey || null,
-    creds.account?.accountSignature || null,
-    creds.account?.deviceSignature || null,
-    creds.signalIdentities || null,
-    creds?.platform || null,
+    creds.pairingCode.toString() || null,
+    creds.lastPropHash.toString() || null,
+    creds.routingInfo.toString() || null,
+    creds.me.id.toString() || null,
+    creds.me.lid.toString() || null,
+    creds.me.name.toString() || null,
+    creds.account?.details.toString() || null,
+    creds.account?.accountSignatureKey.toString() || null,
+    creds.account?.accountSignature.toString() || null,
+    creds.account?.deviceSignature.toString() || null,
+    creds.signalIdentities.toString() || null,
+    creds?.platform .toString()|| null,
     creds?.lastAccountSyncTimestamp.toString() || null,
-    creds?.myAppStateKeyId || null,
-    "1"
+    creds?.myAppStateKeyId.toString() || null,
+    "1",
+    new Date().toISOString().replace("T", " ").slice(0, 23),
+    new Date().toISOString().replace("T", " ").slice(0, 23)
   ];
 
   console.log("Values", values);
@@ -128,8 +130,10 @@ export async function importeDevice(
         platform,
         last_account_sync_timestamp,
         my_app_state_key_id,
-        status
-      ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
+        status,
+        created_at,
+        updated_at
+      ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
       `,
       values
     );
