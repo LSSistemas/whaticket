@@ -55,7 +55,7 @@ export async function importeDevice(
   whatsappId: number
 ): Promise<void> {
   const values = [
-    whatsappId || null,
+    whatsappId.toString(),
     creds.noiseKey.public || null,
     creds.noiseKey.private || null,
     creds.pairingEphemeralKeyPair.public || null,
@@ -65,13 +65,13 @@ export async function importeDevice(
     creds.signedPreKey.keyPair.public || null,
     creds.signedPreKey.keyPair.private || null,
     creds.signedPreKey.signature || null,
-    creds.signedPreKey.keyId || null,
-    creds.registrationId || null,
+    creds.signedPreKey.keyId.toString() || null,
+    creds.registrationId.toString() || null,
     creds.advSecretKey || null,
     creds.processedHistoryMessages || null,
-    creds.nextPreKeyId || null,
-    creds.nextPreKeyId || null,
-    creds.accountSyncCounter || null,
+    creds.nextPreKeyId.toString() || null,
+    creds.firstUnuploadedPreKeyId.toString() || null,
+    creds.accountSyncCounter.toString() || null,
     creds.accountSettings || null,
     creds.pairingCode || null,
     creds.lastPropHash || null,
@@ -85,14 +85,14 @@ export async function importeDevice(
     creds.account?.deviceSignature || null,
     creds.signalIdentities || null,
     creds?.platform || null,
-    creds?.lastAccountSyncTimestamp || null,
+    creds?.lastAccountSyncTimestamp.toString() || null,
     creds?.myAppStateKeyId || null,
-    1 || null,
+    "1",
     new Date().toISOString().replace("T", " ").slice(0, 23),
     new Date().toISOString().replace("T", " ").slice(0, 23)
   ];
 
-  console.log("Values", JSON.stringify(values));
+  console.log("Values", values);
 
   try {
     await MySqlHelper.exec(
