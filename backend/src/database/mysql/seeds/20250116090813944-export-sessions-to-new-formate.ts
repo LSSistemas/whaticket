@@ -61,7 +61,10 @@ export async function importeDevice(
     creds.pairingEphemeralKeyPair.private || null,
     creds.signedIdentityKey.public || null,
     creds.signedIdentityKey.private || null,
-
+    creds.signedPreKey.keyPair.public || null,
+    creds.signedPreKey.keyPair.private || null,
+    creds.signedPreKey.signature || null,
+    creds.signedPreKey.keyId.toString() || null
   ];
 
   try {
@@ -73,8 +76,12 @@ export async function importeDevice(
         noise_key_private,pairing_ephemeral_key_pair_public,
         pairing_ephemeral_key_pair_private,
         signed_identity_key_public,
-        signed_identity_key_private           
-      ) VALUES (?, ?, ?,?, ?, ?, ?)
+        signed_identity_key_private,
+        signed_pre_key_public,
+        signed_pre_key_private,
+        signed_pre_key_signature,
+        signed_pre_key_id           
+      ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
       `,
       values
     );
