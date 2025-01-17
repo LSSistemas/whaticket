@@ -4,7 +4,7 @@
 /* eslint-disable no-await-in-loop */
 import dotenv from "dotenv";
 import mysql from "mysql2/promise";
-import { AuthenticationCreds, BufferJSON, Buffer } from "baileys";
+import { AuthenticationCreds, BufferJSON } from "baileys";
 import { MySqlHelper } from "../mysql-helper";
 import { createDevice } from "../repositories/device-repository";
 
@@ -55,41 +55,41 @@ export async function importeDevice(
   whatsappId: number
 ): Promise<void> {
   const values = [
-    whatsappId,
-    Buffer.from(creds.noiseKey.public || "", "utf-8"),
-    Buffer.from(creds.noiseKey.private || "", "utf-8"),
-    Buffer.from(creds.pairingEphemeralKeyPair.public || "", "utf-8"),
-    Buffer.from(creds.pairingEphemeralKeyPair.private || "", "utf-8"),
-    Buffer.from(creds.signedIdentityKey.public || "", "utf-8"),
-    Buffer.from(creds.signedIdentityKey.private || "", "utf-8"),
-    Buffer.from(creds.signedPreKey.keyPair.public || "", "utf-8"),
-    Buffer.from(creds.signedPreKey.keyPair.private || "", "utf-8"),
-    Buffer.from(creds.signedPreKey.signature || "", "utf-8"),
-    creds.signedPreKey.keyId || null,
-    creds.registrationId || null,
+    whatsappId.toString(),
+    creds.noiseKey.public || null,
+    creds.noiseKey.private || null,
+    creds.pairingEphemeralKeyPair.public || null,
+    creds.pairingEphemeralKeyPair.private || null,
+    creds.signedIdentityKey.public || null,
+    creds.signedIdentityKey.private || null,
+    creds.signedPreKey.keyPair.public || null,
+    creds.signedPreKey.keyPair.private || null,
+    creds.signedPreKey.signature || null,
+    creds.signedPreKey.keyId.toString() || null,
+    creds.registrationId.toString() || null,
     creds.advSecretKey || null,
-    JSON.stringify(creds.processedHistoryMessages) || null,
-    creds.nextPreKeyId || null,
-    creds.firstUnuploadedPreKeyId || null,
-    creds.accountSyncCounter || null,
-    JSON.stringify(creds.accountSettings) || null,
+    creds.processedHistoryMessages || null,
+    creds.nextPreKeyId.toString() || null,
+    creds.firstUnuploadedPreKeyId.toString() || null,
+    creds.accountSyncCounter.toString() || null,
+    creds.accountSettings.toString() || null,
     creds.pairingCode || null,
     creds.lastPropHash || null,
-    creds.routingInfo ? Buffer.from(creds.routingInfo, "utf-8") : null,
-    creds.me?.id || null,
-    creds.me?.lid || null,
-    creds.me?.name || null,
-    Buffer.from(creds.account?.details || "", "utf-8"),
-    Buffer.from(creds.account?.accountSignatureKey || "", "utf-8"),
-    Buffer.from(creds.account?.accountSignature || "", "utf-8"),
-    Buffer.from(creds.account?.deviceSignature || "", "utf-8"),
-    JSON.stringify(creds.signalIdentities) || null,
-    creds.platform || null,
-    creds.lastAccountSyncTimestamp || null,
-    creds.myAppStateKeyId || null,
-    1,
-    new Date().toISOString().slice(0, 19).replace("T", " "),
-    new Date().toISOString().slice(0, 19).replace("T", " ")
+    creds.routingInfo || null,
+    creds.me.id || null,
+    creds.me.lid || null,
+    creds.me.name || null,
+    creds.account?.details || null,
+    creds.account?.accountSignatureKey || null,
+    creds.account?.accountSignature || null,
+    creds.account?.deviceSignature || null,
+    creds.signalIdentities || null,
+    creds?.platform || null,
+    creds?.lastAccountSyncTimestamp.toString() || null,
+    creds?.myAppStateKeyId || null,
+    "1",
+    new Date().toISOString().replace("T", " ").slice(0, 23),
+    new Date().toISOString().replace("T", " ").slice(0, 23)
   ];
 
   console.log("Values", values);
