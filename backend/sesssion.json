@@ -1,0 +1,132 @@
+{
+    "creds": {
+        "noiseKey": {
+            "private": {
+                "type": "Buffer",
+                "data": "6DcmukHfRILjCpdxMZLmzmMFvRl2ZdOH4Dl80mGgu20="
+            },
+            "public": {
+                "type": "Buffer",
+                "data": "KS5kQcxX7dAkV/Cp2/6fFg+fEoyJuQy+mjgPagcx7xg="
+            }
+        },
+        "pairingEphemeralKeyPair": {
+            "private": {
+                "type": "Buffer",
+                "data": "UCf2vZVGgsBv7Isf8tRz1pSb1vkaqmGIX0PnrvbSeUc="
+            },
+            "public": {
+                "type": "Buffer",
+                "data": "1/xd35fsOD3Gh/NyRo/iSSRYXMx5opnl/IbHzyFDhQY="
+            }
+        },
+        "signedIdentityKey": {
+            "private": {
+                "type": "Buffer",
+                "data": "QF4s/t44JQHqqWZYWFu0vpQndhVRSHur4arFlclTJWk="
+            },
+            "public": {
+                "type": "Buffer",
+                "data": "D9YyZ2bMiUftoZ42/u6WRaWanUBCOOsglT20j18FwzU="
+            }
+        },
+        "signedPreKey": {
+            "keyPair": {
+                "private": {
+                    "type": "Buffer",
+                    "data": "aDc189tVxpUj4q1plsIlABMpcqNMU5i00Y/84ENAYVQ="
+                },
+                "public": {
+                    "type": "Buffer",
+                    "data": "E8dkJwH2TiwERhLktlI+Y+YnqPmLMoENvHR9HevFnDI="
+                }
+            },
+            "signature": {
+                "type": "Buffer",
+                "data": "z+U+M/dbPWWM94TmuC/p3Xmni38iVAlaauasjyuKPqwSIvkmO6s6E3AYIcIt722b5DKqv+kJfuiuk3s8jZDlBQ=="
+            },
+            "keyId": 1
+        },
+        "registrationId": 132,
+        "advSecretKey": "/PQIc9qz25T0kJdro4v79MJobKmOY3MpUKPWLaLkLl4=",
+        "processedHistoryMessages": [
+            {
+                "key": {
+                    "remoteJid": "558007071724@s.whatsapp.net",
+                    "fromMe": true,
+                    "id": "5773FF2C99526BAD010720024C9D906C"
+                },
+                "messageTimestamp": 1736969654
+            },
+            {
+                "key": {
+                    "remoteJid": "558007071724@s.whatsapp.net",
+                    "fromMe": true,
+                    "id": "1444CEC30A3E8BB63BC1A572363B7220"
+                },
+                "messageTimestamp": 1736969658
+            },
+            {
+                "key": {
+                    "remoteJid": "558007071724@s.whatsapp.net",
+                    "fromMe": true,
+                    "id": "687B9C1D85A7E4C70D06A733F225930C"
+                },
+                "messageTimestamp": 1736969700
+            },
+            {
+                "key": {
+                    "remoteJid": "558007071724@s.whatsapp.net",
+                    "fromMe": true,
+                    "id": "88CB86AD7DC059007B81F80543DEACAD"
+                },
+                "messageTimestamp": 1736969720
+            }
+        ],
+        "nextPreKeyId": 61,
+        "firstUnuploadedPreKeyId": 61,
+        "accountSyncCounter": 1,
+        "accountSettings": {
+            "unarchiveChats": false
+        },
+        "deviceId": "tX-3VjaTR7Cpb5igN_0whw",
+        "phoneId": "c91cb0ce-706b-4e27-b24f-26bc657cdc28",
+        "identityId": {
+            "type": "Buffer",
+            "data": "mX0U6Xf7Ra3OQj7z+GZsRYprF6o="
+        },
+        "registered": false,
+        "backupToken": {
+            "type": "Buffer",
+            "data": "aThmTPt/UlZrqZepemOx75iwssg="
+        },
+        "registration": {},
+        "account": {
+            "details": "CLbX1Z8HEJ6boLwGGAogACgA",
+            "accountSignatureKey": "Hrka+GJr32RfjHk7hsIC+1DgSSoZp09eCmh3UWh042I=",
+            "accountSignature": "83VSasjX9bkJDMXYTn+zsZRX1DzwKeZnhEpDGu7CgHUDfBEmEOondWl4byGit4WRjBZbJ+mnB62UeoNFtul4AQ==",
+            "deviceSignature": "9hHE+ZfTHY5bH2uQfTLjLWuaEslgnuyTFLUg1VXqE7k8d3bb+E3UXCFLpgxjweKAPvRxZqFySdtWi53OecEcBg=="
+        },
+        "me": {
+            "id": "558007071724:95@s.whatsapp.net",
+            "name": "LS-Sistemas - OW.Net",
+            "lid": "103272639688919:95@lid"
+        },
+        "signalIdentities": [
+            {
+                "identifier": {
+                    "name": "558007071724:95@s.whatsapp.net",
+                    "deviceId": 0
+                },
+                "identifierKey": {
+                    "type": "Buffer",
+                    "data": "BR65Gvhia99kX4x5O4bCAvtQ4EkqGadPXgpod1FodONi"
+                }
+            }
+        ],
+        "platform": "smba",
+        "lastAccountSyncTimestamp": 1736981314,
+        "myAppStateKeyId": "AAAAAGAw"
+    },
+    "keys": {}
+}
