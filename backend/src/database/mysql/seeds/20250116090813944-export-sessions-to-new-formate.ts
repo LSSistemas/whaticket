@@ -67,18 +67,38 @@ export async function importeDevice(
     creds.signedPreKey.keyId.toString() || null,
     creds.registrationId.toString() || null,
     creds.advSecretKey || null,
-    creds.processedHistoryMessages || null,
     creds.nextPreKeyId.toString() || null,
-
+    creds.firstUnuploadedPreKeyId.toString() || null,
+    creds.accountSyncCounter.toString() || null,
+    creds.pairingCode || null,
+    creds.lastPropHash || null,
+    creds.routingInfo || null,
+    creds.me.id || null,
+    creds.me.lid || null,
+    creds.me.name || null,
+    creds.account?.details || null,
+    creds.account?.accountSignatureKey || null,
+    creds.account?.accountSignature || null,
+    creds.account?.deviceSignature || null,
+    creds?.platform || null,
+    creds?.lastAccountSyncTimestamp.toString() || null,
+    creds?.myAppStateKeyId || null,
+    "1",
+    new Date().toISOString().replace("T", " ").slice(0, 23),
+    new Date().toISOString().replace("T", " ").slice(0, 23)
   ];
 
+
+
+  
   try {
     await MySqlHelper.exec(
       `
       INSERT INTO devices (
         whatsapp_id,
         noise_key_public,
-        noise_key_private,pairing_ephemeral_key_pair_public,
+        noise_key_private,
+        pairing_ephemeral_key_pair_public,
         pairing_ephemeral_key_pair_private,
         signed_identity_key_public,
         signed_identity_key_private,
@@ -88,9 +108,26 @@ export async function importeDevice(
         signed_pre_key_id,
         registration_id,
         adv_secret_key,
-        processed_history_messages,
-        next_pre_key_id           
-      ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
+        next_pre_key_id,
+        first_unuploaded_pre_key_id,
+        account_sync_counter,
+        pairing_code,
+        last_prop_hash,
+        routing_info,
+        jid,
+        lid,
+        name,
+        account_details,
+        account_signature_key,
+        account_signature,
+        account_device_signature,
+        platform,
+        last_account_sync_timestamp,
+        my_app_state_key_id,
+        status,
+        created_at,
+        updated_at
+      ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
       `,
       values
     );
