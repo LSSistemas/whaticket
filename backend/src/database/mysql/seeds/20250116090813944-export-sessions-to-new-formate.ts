@@ -38,10 +38,9 @@ export const exportSessionsToNewFormate = async () => {
         continue;
       }
       await importeDevice(creds, whatsapp.id);
-
-      connection.end();
-      MySqlHelper.disconnect();
     }
+    connection.end();
+    MySqlHelper.disconnect();
   } catch (error) {
     console.error(error);
   }
