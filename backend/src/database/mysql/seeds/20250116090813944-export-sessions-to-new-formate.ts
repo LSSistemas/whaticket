@@ -34,8 +34,8 @@ export const exportSessionsToNewFormate = async () => {
 
       console.log("Creds", JSON.stringify(creds));
       if (!creds) {
-        console.error(
-          credenciais não encontradas para o whatsapp ${whatsapp.id}
+        console.error(`
+          credenciais não encontradas para o whatsapp ${whatsapp.id}`
         );
         continue;
       }
