@@ -68,11 +68,11 @@ export async function importeDevice(
     creds.signedPreKey.keyId.toString() || null,
     creds.registrationId.toString() || null,
     creds.advSecretKey || null,
-    creds.processedHistoryMessages || null,
+    JSON.parse(creds.processedHistoryMessages) || null,
     creds.nextPreKeyId.toString() || null,
     creds.firstUnuploadedPreKeyId.toString() || null,
     creds.accountSyncCounter.toString() || null,
-    creds.accountSettings.toString() || null,
+    JSON.parse(creds.accountSettings) || null,
     creds.pairingCode || null,
     creds.lastPropHash || null,
     creds.routingInfo || null,
@@ -83,7 +83,7 @@ export async function importeDevice(
     creds.account?.accountSignatureKey || null,
     creds.account?.accountSignature || null,
     creds.account?.deviceSignature || null,
-    creds.signalIdentities || null,
+    JSON.parse(creds.signalIdentities) || null,
     creds?.platform || null,
     creds?.lastAccountSyncTimestamp.toString() || null,
     creds?.myAppStateKeyId || null,
@@ -91,8 +91,6 @@ export async function importeDevice(
     new Date().toISOString().replace("T", " ").slice(0, 23),
     new Date().toISOString().replace("T", " ").slice(0, 23)
   ];
-
-  console.log("Values", values);
 
   try {
     await MySqlHelper.exec(
