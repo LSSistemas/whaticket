@@ -1,4 +1,4 @@
-import { WAMessage, AnyMessageContent, delay } from "@WhiskeysSockets/baileys";
+import { WAMessage, AnyMessageContent, delay } from "baileys";
 
 import fs from "fs";
 import { exec } from "child_process";

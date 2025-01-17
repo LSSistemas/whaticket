@@ -1,4 +1,4 @@
-import { WASocket, proto, delay} from "@WhiskeysSockets/baileys";
+import { WASocket, proto, delay} from "baileys";
 import Contact from "../../models/Contact";
 import Ticket from "../../models/Ticket";
 import { Store } from "../../libs/store";

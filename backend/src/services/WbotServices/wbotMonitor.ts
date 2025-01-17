@@ -2,7 +2,7 @@ import {
   WASocket,
   BinaryNode,
   Contact as BContact
-} from "@WhiskeysSockets/baileys";
+} from "baileys";
 import * as Sentry from "@sentry/node";
 
 import { Op } from "sequelize";
@@ -35,7 +35,7 @@ async function handleCallTerminate(wbot: Session, node: BinaryNode, content: any
   });
 
   if (sendMsgCall?.value === "disabled") {
-    //console.log("Mensagem Automática");
+    // console.log("Mensagem Automática");
     await wbot.sendMessage(node.attrs.from, {
       text: "*Mensagem Automática:*\nAs chamadas de voz e vídeo estão desabilitadas para esse WhatsApp, favor enviar uma mensagem de texto. Obrigado"
     });

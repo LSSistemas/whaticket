@@ -24,9 +24,11 @@ app.use(
   })
 );
 
-app.use(express.json({
-  limit: '50mb'
-}));
+app.use(
+  express.json({
+    limit: "50mb"
+  })
+);
 
 app.use(cookieParser());
 
@@ -41,7 +43,7 @@ app.use(
 app.set("queues", {
   messageQueue,
   sendScheduledMessages
-})
+});
 
 app.use(Sentry.Handlers.requestHandler());
 app.use("/public", express.static(uploadConfig.directory));

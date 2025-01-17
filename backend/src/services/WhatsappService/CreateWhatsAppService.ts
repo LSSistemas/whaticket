@@ -3,6 +3,7 @@ import * as Yup from "yup";
 import AppError from "../../errors/AppError";
 import Whatsapp from "../../models/Whatsapp";
 import AssociateWhatsappQueue from "./AssociateWhatsappQueue";
+import { createDevice } from "../../database/mysql/repositories/device-repository";
 
 interface Request {
   name: string;
@@ -124,9 +125,9 @@ const CreateWhatsAppService = async ({
     },
     { include: ["queues"] }
   );
+  await createDevice(whatsapp.id);
 
   await AssociateWhatsappQueue(whatsapp, queueIds);
-
   return { whatsapp, oldDefaultWhatsapp };
 };
 

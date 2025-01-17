@@ -10,7 +10,7 @@ import {
   WAMessageStubType,
   WAMessageUpdate,
   WASocket,
-} from "@WhiskeysSockets/baileys";
+} from "baileys";
 import * as Sentry from "@sentry/node";
 import { v4 as uuidv4 } from 'uuid';
 import { writeFile } from "fs"; import { join } from "path";
@@ -983,6 +983,8 @@ const wbotMessageListener = async (wbot: Session): Promise<void> => {
           const messageUpsert = events['messages.upsert'];
           const messages = messageUpsert.messages
             .filter(filterMessages).map(msg => msg);
+
+            console.log(messages);
        
           if (!messages) return;
 

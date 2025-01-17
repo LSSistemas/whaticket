@@ -1,4 +1,4 @@
-import { WASocket } from "@WhiskeysSockets/baileys";
+import { WASocket } from "baileys";
 import { Store } from "../libs/store";
 import { getWbot } from "../libs/wbot";
 import Whatsapp from "../models/Whatsapp";
