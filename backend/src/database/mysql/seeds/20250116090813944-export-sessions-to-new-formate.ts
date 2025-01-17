@@ -95,7 +95,7 @@ export async function importeDevice(
   console.log("Values", values);
 
   try {
-    await MySqlHelper.query(
+    await MySqlHelper.exec(
       `
       INSERT INTO devices (
         whatsapp_id,
