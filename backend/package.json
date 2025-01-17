@@ -12,12 +12,12 @@
     "dev:server": "ts-node-dev --respawn --transpile-only --ignore node_modules src/server.ts",
     "pretest": "NODE_ENV=test sequelize db:migrate && NODE_ENV=test sequelize db:seed:all",
     "test": "NODE_ENV=test jest",
-    "posttest": "NODE_ENV=test sequelize db:migrate:undo:all"
+    "posttest": "NODE_ENV=test sequelize db:migrate:undo:all",
+    "db:devices": "ts-node --transpile-only  src/database/mysql/seeds/20250113151143516-create-tables.ts"
   },
   "author": "",
   "license": "MIT",
-  "dependencies": {    
-    "@adiwajshing/keyed-db": "^0.2.4",
+  "dependencies": {
     "@ffmpeg-installer/ffmpeg": "^1.1.0",
     "@google-cloud/dialogflow": "^4.7.0",
     "@hapi/boom": "^9.1.4",
@@ -26,8 +26,8 @@
     "@types/bull": "^3.15.8",
     "@types/lodash": "^4.14.182",
     "@types/pino": "^6.3.4",
-    "@WhiskeysSockets/baileys": "github:lsergiozq/Baileys.git#develop",
     "axios": "^0.26.1",
+    "baileys": "github:WhiskeySockets/Baileys",
     "bcryptjs": "^2.4.3",
     "bull": "^4.8.4",
     "cookie-parser": "^1.4.5",

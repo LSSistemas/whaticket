@@ -1,4 +1,4 @@
-import { WAMessage, delay } from "@WhiskeysSockets/baileys";
+import { WAMessage, delay } from "baileys";
 import AppError from "../../errors/AppError";
 import GetTicketWbot from "../../helpers/GetTicketWbot";
 import Message from "../../models/Message";

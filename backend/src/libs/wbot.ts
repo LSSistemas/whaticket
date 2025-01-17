@@ -1,16 +1,15 @@
 import makeWASocket, {
   WASocket,
-  AuthenticationState,
   DisconnectReason,
   fetchLatestBaileysVersion,
-  makeInMemoryStore,
-} from "@WhiskeysSockets/baileys";
+  makeInMemoryStore
+} from "baileys";
 
 import { Boom } from "@hapi/boom";
-import MAIN_LOGGER from "@WhiskeysSockets/baileys/lib/Utils/logger";
+import MAIN_LOGGER from "baileys/lib/Utils/logger";
 import Whatsapp from "../models/Whatsapp";
 import { logger } from "../utils/logger";
-import authState from "../helpers/authState";
+import { authState } from "../helpers/authState";
 import AppError from "../errors/AppError";
 import { getIO } from "./socket";
 import { Store } from "./store";
@@ -78,41 +77,20 @@ export const initWbot = async (whatsapp: Whatsapp): Promise<Session> => {
 
         let wsocket: Session = null;
         const store = makeInMemoryStore({
-          logger: loggerBaileys          
+          logger: loggerBaileys
         });
 
-        const { state, saveState } = await authState(whatsapp);
+        const { state, saveCreds } = await authState(whatsapp.id);
 
         wsocket = makeWASocket({
-              logger: loggerBaileys,
-              printQRInTerminal: false,
-              auth: state as AuthenticationState,
-              generateHighQualityLinkPreview: true,
-              version,
-              patchMessageBeforeSending: (message) => {
-                const requiresPatch = !!(
-                    message.buttonsMessage ||
-                    message.templateMessage ||
-                    message.listMessage
-                );
-                if (requiresPatch) {
-                    message = {
-                        viewOnceMessage: {
-                            message: {
-                                messageContextInfo: {
-                                    deviceListMetadataVersion: 2,
-                                    deviceListMetadata: {},
-                                },
-                                ...message,
-                            },
-                        },
-                    };
-                }
-    
-                return message;
-              }
-            });
-          
+          printQRInTerminal: false,
+          auth: state,
+          defaultQueryTimeoutMs: 60_000,
+          connectTimeoutMs: 60_000,
+          keepAliveIntervalMs: 20_000,
+          markOnlineOnConnect: true,
+          version
+        });
 
         wsocket.ev.on(
           "connection.update",
@@ -217,7 +195,7 @@ export const initWbot = async (whatsapp: Whatsapp): Promise<Session> => {
             }
           }
         );
-        wsocket.ev.on("creds.update", saveState);
+        wsocket.ev.on("creds.update", saveCreds);
 
         wsocket.store = store;
         store.bind(wsocket.ev);

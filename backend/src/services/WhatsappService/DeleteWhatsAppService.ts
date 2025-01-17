@@ -1,6 +1,6 @@
 import Whatsapp from "../../models/Whatsapp";
 import AppError from "../../errors/AppError";
-import DeleteBaileysService from "../BaileysServices/DeleteBaileysService";
+import { deleteDevice } from "../../database/mysql/repositories/device-repository";
 
 const DeleteWhatsAppService = async (id: string): Promise<void> => {
   const whatsapp = await Whatsapp.findOne({
@@ -12,7 +12,7 @@ const DeleteWhatsAppService = async (id: string): Promise<void> => {
   }
 
   await whatsapp.destroy();
-  await DeleteBaileysService(id);
+  await deleteDevice(whatsapp.id);
 };
 
 export default DeleteWhatsAppService;

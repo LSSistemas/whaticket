@@ -7,7 +7,7 @@ import { AnyMessageContent, WAUrlInfo,
     WATextMessage,
     delay,
     MessageContentGenerationOptions,
-    MessageGenerationOptions } from "@WhiskeysSockets/baileys";
+    MessageGenerationOptions } from "baileys";
 
 export type MessageData = {
   number: number | string;
