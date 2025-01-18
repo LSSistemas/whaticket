@@ -4,7 +4,7 @@
 /* eslint-disable no-await-in-loop */
 import dotenv from "dotenv";
 import mysql from "mysql2/promise";
-import { AuthenticationCreds } from "baileys";
+import { AuthenticationCreds, BufferJSON } from "baileys";
 import { MySqlHelper } from "../mysql-helper";
 import { createDevice } from "../repositories/device-repository";
 
@@ -31,7 +31,8 @@ export const exportSessionsToNewFormate = async () => {
         await createDevice(whatsapp.id);
         continue;
       }
-      const { creds } = JSON.parse(session);
+      const { creds } = JSON.parse(session, BufferJSON.reviver);
+      console.log(creds);
       if (!creds) {
         console.error(
           `credenciais não encontradas para o whatsapp ${whatsapp.id}`
@@ -40,6 +41,9 @@ export const exportSessionsToNewFormate = async () => {
       }
       await importeDevice(creds, whatsapp.id);
     }
+
+    connection.end();
+    MySqlHelper.disconnect();
   } catch (error) {
     console.error(error);
   }
@@ -52,38 +56,39 @@ export async function importeDevice(
   whatsappId: number
 ): Promise<void> {
   const values = [
-    whatsappId,
-    creds.noiseKey.public ?? null,
-    creds.noiseKey.private ?? null,
-    creds.pairingEphemeralKeyPair.public ?? null,
-    creds.pairingEphemeralKeyPair.private ?? null,
-    creds.signedIdentityKey.public ?? null,
-    creds.signedIdentityKey.private ?? null,
-    creds.signedPreKey.keyPair.public ?? null,
-    creds.signedPreKey.keyPair.private ?? null,
-    creds.signedPreKey.signature ?? null,
-    creds.signedPreKey.keyId ?? null,
-    creds.registrationId ?? null,
-    creds.advSecretKey ?? null,
-    creds.processedHistoryMessages
-      ? JSON.stringify(creds.processedHistoryMessages)
-      : null,
-    creds.nextPreKeyId ?? null,
-    creds.firstUnuploadedPreKeyId ?? null,
-    creds.accountSyncCounter ?? null,
-    creds.accountSettings ? JSON.stringify(creds.accountSettings) : null,
-    creds.pairingCode ?? null,
-    creds.lastPropHash ?? null,
-    creds.routingInfo ? JSON.stringify(creds.routingInfo) : null,
-    creds.account?.details ?? null,
-    creds.account?.accountSignatureKey ?? null,
-    creds.account?.accountSignature ?? null,
-    creds.account?.deviceSignature ?? null,
-    creds.signalIdentities ?? null,
-    creds.platform ?? null,
-    creds.lastAccountSyncTimestamp ?? null,
-    creds.myAppStateKeyId ?? null,
-    1,
+    whatsappId.toString(),
+    creds.noiseKey.public || null,
+    creds.noiseKey.private || null,
+    creds.pairingEphemeralKeyPair.public || null,
+    creds.pairingEphemeralKeyPair.private || null,
+    creds.signedIdentityKey.public || null,
+    creds.signedIdentityKey.private || null,
+    creds.signedPreKey.keyPair.public || null,
+    creds.signedPreKey.keyPair.private || null,
+    creds.signedPreKey.signature || null,
+    creds.signedPreKey.keyId.toString() || null,
+    creds.registrationId || null,
+    creds.advSecretKey || null,
+    JSON.stringify(creds.processedHistoryMessages) || null,
+    creds.nextPreKeyId.toString() || null,
+    creds.firstUnuploadedPreKeyId.toString() || null,
+    creds.accountSyncCounter.toString() || null,
+    JSON.stringify(creds.accountSettings) || null,
+    creds.pairingCode || null,
+    creds.lastPropHash || null,
+    creds.routingInfo || null,
+    creds.me.id || null,
+    creds.me.lid || null,
+    creds.me.name || null,
+    creds.account?.details || null,
+    creds.account?.accountSignatureKey || null,
+    creds.account?.accountSignature || null,
+    creds.account?.deviceSignature || null,
+    JSON.stringify(creds.signalIdentities) || null,
+    creds?.platform || null,
+    creds?.lastAccountSyncTimestamp.toString() || null,
+    creds?.myAppStateKeyId || null,
+    "1",
     new Date().toISOString().replace("T", " ").slice(0, 23),
     new Date().toISOString().replace("T", " ").slice(0, 23)
   ];
